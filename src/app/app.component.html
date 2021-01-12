@@ -1,0 +1,31 @@
+<div class="example-container" *ngIf="user">
+    <mat-toolbar color="primary" class="example-toolbar">
+        <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+        <h1 class="example-app-name">BOQ</h1>
+        <span class="example-spacer"></span>
+        <button mat-icon-button [matMenuTriggerFor]="auth">
+            <mat-icon> person </mat-icon>
+        </button>
+        <mat-menu #auth="matMenu">
+            <button mat-menu-item (click)="OnLogout()">
+                <mat-icon> exit_to_app </mat-icon>
+                <span> Logout </span>
+            </button>
+        </mat-menu>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="example-sidenav-container">
+        <mat-sidenav #snav>
+            <mat-nav-list>
+                <a mat-list-item routerLink="/" routerLinkActive="active" class="active">Dashboard</a>
+                <a mat-list-item routerLink="/system/super-admin" routerLinkActive="active">Super Admin</a>
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content style="background-color: rgb(128, 115, 115);">
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+<app-login *ngIf="!user"></app-login>
+

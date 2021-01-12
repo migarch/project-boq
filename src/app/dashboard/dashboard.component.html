@@ -1,1 +1,74 @@
-<p>dashboard works!</p>
+    <mat-card>
+      <mat-card-content>
+        <button mat-button (click)="onRegister()" color="primary">New Register</button>
+        <mat-form-field style="display: inline-block;">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+        </mat-form-field>
+        <div class="mat-elevation-z8">
+          <mat-table #table [dataSource]="dataSource" matSort>
+            <!-- Position Column -->
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+            </ng-container>
+          
+            <!-- Email Column -->
+            <ng-container matColumnDef="ContactEmail">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.ContactEmail}} </mat-cell>
+            </ng-container>
+          
+
+            <ng-container matColumnDef="CompanyName">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Company Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.CompanyName}} </mat-cell>
+            </ng-container>
+          
+            
+            <ng-container matColumnDef="ContactPhone">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Phone </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.ContactPhone}} </mat-cell>
+            </ng-container>
+            
+            <ng-container matColumnDef="CompanyHOAddres">
+                <mat-header-cell *matHeaderCellDef> Phone </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.CompanyHOAddres}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="CompanyProjectOffi">
+                <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.CompanyProjectOffi}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="CompanyLogo">
+                <mat-header-cell *matHeaderCellDef> Logo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.CompanyLogo}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="CompanyGST">
+                <mat-header-cell *matHeaderCellDef> GST No </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.CompanyGST}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="CompanyType">
+                <mat-header-cell *matHeaderCellDef> Company Type </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.CompanyType}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="ProjectSubscription">
+                <mat-header-cell *matHeaderCellDef> Total Subscription </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.ProjectSubscription}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="Archive">
+                <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
+                <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="getRecord(element.id)">Edit</button> </mat-cell>
+              </ng-container>
+          
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>

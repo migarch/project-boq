@@ -1,0 +1,69 @@
+<h2 mat-dialog-title>Register Company</h2>
+<mat-dialog-content>
+   
+            <form [formGroup]="RegiCompany" #registerForm="ngForm" (ngSubmit)="OnSubmit()">
+                <mat-error>
+                    {{ error }}
+                </mat-error>
+                <mat-grid-list cols="1">
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Email" formControlName="email" required>
+                        <mat-error>
+                            Please provide a valid email address
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50 ml-2">
+                        <input type="text" matInput placeholder="Company Name" formControlName="company_name" required>
+                        <mat-error>
+                            Please provide a company name
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="number" matInput placeholder="Phone Number" formControlName="company_phone" required>
+                        <mat-error>
+                            Please provide a phone Number
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50 ml-2">
+                        <textarea matInput placeholder="Company Address" formControlName="company_ho_address" required></textarea>
+                        <mat-error>
+                            Please provide a company address
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50">
+                        <textarea matInput placeholder="Project Location" formControlName="company_proj_address" required></textarea>
+                        <mat-error>
+                            Please provide a project location
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50 ml-2">
+                        <input type="text"  matInput placeholder="Company Logo" formControlName="company_logo" required>
+                        <mat-error>
+                            Please provide a company logo
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text"  matInput placeholder="Company GST" formControlName="company_gst" required>
+                        <mat-error>
+                            Please provide a company GST
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50 ml-2">
+                        <input type="text"  matInput placeholder="Company Type" formControlName="company_type" required>
+                        <mat-error>
+                            Please provide a company GST
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50" style="display: block;">
+                        <input type="text"  matInput placeholder="Company Sub" formControlName="project_subscription" required>
+                        <mat-error>
+                            Please provide a company Sub
+                        </mat-error>
+                    </mat-form-field>
+                </mat-grid-list>
+                <mat-dialog-actions align="end">
+                    <button mat-button mat-dialog-close color="primary">Cancel</button>
+                    <button type="submit" [disabled]="registerForm.form.invalid" mat-button [mat-dialog-close]="true" color="primary">Add Company</button>
+                  </mat-dialog-actions>
+            </form>
+</mat-dialog-content>

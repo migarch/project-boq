@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
+import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,8 +9,13 @@ import { SuperAdminComponent } from './super-admin/super-admin.component';
 import { AdminComponent } from './admin/admin.component';
 import { UserComponent } from './user/user.component';
 import { LoginComponent } from './auth/login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SystemModule } from './system-admin/system.module';
+import { appInitializer } from './auth/app.initializer';
+import { AuthenticationService } from './services';
+import { JwtInterceptor } from './auth/jwt.interceptor';
+import { ErrorInterceptor } from './auth/error.interceptor';
+import { MaterialModule } from './shared/angular-material.module';
 
 @NgModule({
   declarations: [
@@ -19,16 +24,25 @@ import { SystemModule } from './system-admin/system.module';
     SuperAdminComponent,
     AdminComponent,
     UserComponent,
-    LoginComponent
+    LoginComponent,
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    FormsModule,
     ReactiveFormsModule,
-    SystemModule 
+    SystemModule,
+    HttpClientModule,
+    MaterialModule,
+    
   ],
-  providers: [],
+  providers: [
+    {provide: APP_INITIALIZER, useFactory:appInitializer, multi:true, deps:[AuthenticationService]},
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi:true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

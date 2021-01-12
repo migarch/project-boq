@@ -6,10 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./system-admin.component.css']
 })
 export class SystemAdminComponent implements OnInit {
-
-  constructor() { }
+  
+  constructor(
+   
+  ) {
+    
+   }
 
   ngOnInit(): void {
+    
   }
 
 }
