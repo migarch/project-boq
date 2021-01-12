@@ -1,14 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { first } from 'rxjs/operators';
-import { AuthenticationService } from '../services';
-import { SystemService } from '../services/system.service';
-import { Role, User } from '../shared';
-import { Company } from '../shared/company';
-import { RegisterCompanyComponent } from '../system-admin/register-company/register-company.component';
+import { ConfirmationDialog } from 'src/app/_modal/confirmation-dialog.component';
+import { AuthenticationService } from '../../services';
+import { SystemService } from '../../services/system.service';
+import { Role, User } from '../../shared';
+import { Company } from '../../shared/company';
+import { RegisterCompanyComponent } from '../register-company/register-company.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,9 +22,10 @@ export class DashboardComponent implements OnInit {
   user: User;
   displayedColumns = [];
   dataSource;
-  systems: Company[] = [];
+  company: Company[] = [];
   dialogValue: string;
   sendValue: string;
+  public RowID;
   
   constructor(
     private authenticationService: AuthenticationService,
@@ -48,16 +50,14 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.getCompany();
     
   }
 
-  getRecord(id){
-    console.log("get id", this.systems);
-    const dialogRef = this.dialog.open(RegisterCompanyComponent,{
-      data: { pageValue: this.sendValue},
-    });
-  }
+  
+
+  
 
   getCompany(){
     this.loading = true;
@@ -66,14 +66,45 @@ export class DashboardComponent implements OnInit {
       .pipe(first())
       .subscribe(systems =>{
         this.loading = false;
-        this.systems = systems;
-        this.displayedColumns = Object.keys(this.systems[0]);
-        this.dataSource = new MatTableDataSource(this.systems);
+        this.company = systems;
+        this.displayedColumns = ['ContactEmail', 'CompanyName','ContactPhone','CompanyType','Edit','Delete'];
+        this.dataSource = new MatTableDataSource(this.company);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         
       });
     }
+  }
+
+  getRecord(row_obj){
+    console.log("get id", row_obj);
+    // const dialogConfi = new MatDialogConfig();
+    // dialogConfi.disableClose = true;
+    // dialogConfi.autoFocus = true;
+    // dialogConfi.data = {ContactEmail:this.company[id].ContactEmail};
+    // const dialogRef = this.dialog.open(RegisterCompanyComponent, dialogConfi);
+  }
+
+  DeleteRecord(ContactEmail){
+    const sendEmail = {email:ContactEmail};
+    const dialogRef = this.dialog.open(ConfirmationDialog,{
+      data:{
+        message: 'Are you sure want to delete?',
+        buttonText:{
+          ok:'Sure',
+          cancel: 'No'
+        }
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) =>{
+      if(confirmed){
+        this.systemService.ArchiveCompany(ContactEmail);
+        this.getCompany();
+      }
+  });
+    
+
   }
 
   applyFilter(fiterValue: string){

@@ -60,9 +60,13 @@
                 <mat-cell *matCellDef="let element"> {{element.ProjectSubscription}} </mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="Archive">
+              <ng-container matColumnDef="Edit">
                 <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
                 <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="getRecord(element.id)">Edit</button> </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Delete">
+                <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
+                <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="DeleteRecord(element.ContactEmail)">Delete</button> </mat-cell>
               </ng-container>
           
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -25,15 +25,15 @@ export class RegisterCompanyComponent implements OnInit {
 
   ngOnInit(): void {
     this.RegiCompany = this.formBuilder.group({
-      email:['', Validators.email],
-      company_name:['', Validators.required],
-      company_phone:['', Validators.required],
-      company_ho_address:['', Validators.required],
-      company_proj_address:['', Validators.required],
-      company_logo:['', Validators.required],
-      company_gst:['', Validators.required],
-      company_type:['', Validators.required],
-      project_subscription:['', Validators.required]
+      ContactEmail:['', Validators.email],
+      CompanyName:['', Validators.required],
+      ContactPhone:['', Validators.required],
+      CompanyHOAddres:['', Validators.required],
+      CompanyProjectOffi:['', Validators.required],
+      CompanyLogo:['', Validators.required],
+      CompanyGST:['', Validators.required],
+      CompanyType:['', Validators.required],
+      ProjectSubscription:['', Validators.required]
 
     });
   }

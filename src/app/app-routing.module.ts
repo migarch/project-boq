@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { LoginComponent } from './auth/login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent } from './system-admin/dashboard/dashboard.component';
 import { Role } from './shared';
 import { SuperAdminComponent } from './super-admin/super-admin.component';
 import { RegisterCompanyComponent } from './system-admin/register-company/register-company.component';
