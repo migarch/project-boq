@@ -1,0 +1,8 @@
+table {
+    width: 100%;
+}
+
+.full-width{
+    height: 100% !important;
+    border-radius: none;
+}

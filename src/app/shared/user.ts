@@ -5,4 +5,5 @@ export class User{
     name:string;
     role:Role;
     token?:string;
+    manu?:number;
 }

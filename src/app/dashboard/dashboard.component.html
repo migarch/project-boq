@@ -1,6 +1,6 @@
-    <mat-card>
+    <mat-card *ngIf="isSystem" class="full-width">
       <mat-card-content>
-        <button mat-button (click)="onRegister()" color="primary">New Register</button>
+        <button mat-button (click)="onRegister()" color="primary">New Company</button>
         <mat-form-field style="display: inline-block;">
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
         </mat-form-field>
@@ -60,9 +60,14 @@
                 <mat-cell *matCellDef="let element"> {{element.ProjectSubscription}} </mat-cell>
               </ng-container>
 
+              <ng-container matColumnDef="AddUser">
+                <mat-header-cell *matHeaderCellDef> Add User </mat-header-cell>
+                <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="openDialog('Add',{})">Add User</button> </mat-cell>
+              </ng-container>
+
               <ng-container matColumnDef="Edit">
                 <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
-                <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="getRecord(element.id)">Edit</button> </mat-cell>
+                <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="getRecord(element)">Edit</button> </mat-cell>
               </ng-container>
               <ng-container matColumnDef="Delete">
                 <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>

@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>{{ action }} User</h2>
+<mat-dialog-content>
+            <form [formGroup]="RegiUser" #registerForm="ngForm" (ngSubmit)="OnSubmit()">
+                <mat-error>
+                </mat-error>
+                <mat-grid-list cols="1">
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Name" [(ngModel)]="data.Name" formControlName="Name">
+                        <mat-error>
+                            Please provide a name
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="email" matInput placeholder="Email" [(ngModel)]="data.Email" formControlName="Email" Email >
+                        <mat-error>
+                            Please provide a valid email
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="email" matInput placeholder="Password" [(ngModel)]="data.Password" formControlName="Password">
+                        <mat-error>
+                            Please provide a password
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="number" matInput placeholder="Phone" [(ngModel)]="data.PhoneNumber" formControlName="PhoneNumber">
+                        <mat-error>
+                            Please provide a phone number
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50">
+                        <mat-select formControlName="UserRoleId" required>
+                            <mat-option value="2">Super Admin</mat-option>
+                        </mat-select>
+                        <mat-error>
+                            Please select a user role
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Menu" [(ngModel)]="data.UserMenuId" formControlName="UserMenuId">
+                        <mat-error>
+                            Please provide a user role
+                        </mat-error>
+                    </mat-form-field>
+                    
+                </mat-grid-list>
+                <mat-dialog-actions align="end">
+                    <button mat-button mat-dialog-close color="primary" (click)="closeDialog()">Cancel</button>
+                    <button type="submit" [disabled]="registerForm.form.invalid" mat-button [mat-dialog-close]="true"  (click)="doAction()"> {{action}}</button>
+                  </mat-dialog-actions>
+            </form>
+</mat-dialog-content>

@@ -5,11 +5,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { first } from 'rxjs/operators';
 import { ConfirmationDialog } from 'src/app/_modal/confirmation-dialog.component';
-import { AuthenticationService } from '../../services';
-import { SystemService } from '../../services/system.service';
-import { Role, User } from '../../shared';
-import { Company } from '../../shared/company';
-import { RegisterCompanyComponent } from '../register-company/register-company.component';
+import { AuthenticationService } from '../services';
+import { SystemService } from '../services/system.service';
+import { Role, User } from '../shared';
+import { Company } from '../shared/company';
+import { RegisterCompanyComponent } from '../system-admin/register-company/register-company.component';
+import { AddSuperAdminDialog } from '../system-admin/register-super-admin/super-admin.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,6 +35,14 @@ export class DashboardComponent implements OnInit {
   ) {
     this.user = this.authenticationService.userValue;
    }
+
+  get isSystem(){
+    return this.user && this.user.role == Role.System;
+  }
+
+  get isSuper(){
+    return this.user && this.user.role == Role.Super;
+  }
    
   @ViewChild(MatPaginator, { static:true}) paginator:MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -55,10 +64,6 @@ export class DashboardComponent implements OnInit {
     
   }
 
-  
-
-  
-
   getCompany(){
     this.loading = true;
     if(this.user.role == Role.System){
@@ -67,7 +72,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(systems =>{
         this.loading = false;
         this.company = systems;
-        this.displayedColumns = ['ContactEmail', 'CompanyName','ContactPhone','CompanyType','Edit','Delete'];
+        this.displayedColumns = ['ContactEmail', 'CompanyName','ContactPhone','CompanyType','AddUser' ,'Edit','Delete'];
         this.dataSource = new MatTableDataSource(this.company);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -76,13 +81,19 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  getRecord(row_obj){
-    console.log("get id", row_obj);
-    // const dialogConfi = new MatDialogConfig();
-    // dialogConfi.disableClose = true;
-    // dialogConfi.autoFocus = true;
-    // dialogConfi.data = {ContactEmail:this.company[id].ContactEmail};
-    // const dialogRef = this.dialog.open(RegisterCompanyComponent, dialogConfi);
+  openDialog(action, obj){
+    obj.action = action;
+    const dialogRef = this.dialog.open(AddSuperAdminDialog,{
+      data:obj
+    });
+  }
+
+  getRecord(row){
+    const dialogConfi = new MatDialogConfig();
+    dialogConfi.disableClose = true;
+    dialogConfi.autoFocus = true;
+    dialogConfi.data = row ;
+    const dialogRef = this.dialog.open(RegisterCompanyComponent, dialogConfi);
   }
 
   DeleteRecord(ContactEmail){

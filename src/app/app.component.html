@@ -18,7 +18,8 @@
         <mat-sidenav #snav>
             <mat-nav-list>
                 <a mat-list-item routerLink="/" routerLinkActive="active" class="active">Dashboard</a>
-                <a mat-list-item routerLink="/system/super-admin" routerLinkActive="active">Super Admin</a>
+                <a mat-list-item routerLink="/super-admin" *ngIf="isSystem" routerLinkActive="active">Super Admin</a>
+                <a mat-list-item routerLink="/admin" *ngIf="isSuper"  routerLinkActive="active">Admin</a>
             </mat-nav-list>
         </mat-sidenav>
 

@@ -4,7 +4,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DashboardComponent } from './system-admin/dashboard/dashboard.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { SuperAdminComponent } from './super-admin/super-admin.component';
 import { AdminComponent } from './admin/admin.component';
 import { UserComponent } from './user/user.component';
@@ -17,6 +17,7 @@ import { JwtInterceptor } from './auth/jwt.interceptor';
 import { ErrorInterceptor } from './auth/error.interceptor';
 import { MaterialModule } from './shared/angular-material.module';
 import { ConfirmationDialog } from './_modal/confirmation-dialog.component';
+import { AddSuperAdminDialog, RegisterSuperAdminComponent } from './system-admin/register-super-admin/super-admin.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,9 @@ import { ConfirmationDialog } from './_modal/confirmation-dialog.component';
     AdminComponent,
     UserComponent,
     LoginComponent,
-    ConfirmationDialog
+    ConfirmationDialog,
+    RegisterSuperAdminComponent,
+    AddSuperAdminDialog
     
   ],
   imports: [

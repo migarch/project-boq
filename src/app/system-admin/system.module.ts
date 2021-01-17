@@ -6,13 +6,11 @@ import { SystemAdminComponent } from "./system-admin.component";
 import { RegisterCompanyComponent } from "./register-company/register-company.component";
 import { MaterialModule } from "../shared/angular-material.module";
 import { SystemRoutingModule } from "./system-routing.module";
-import { RegisterSuperAdminComponent } from './register-super-admin/super-admin.component';
 
 @NgModule({
     declarations:[
         SystemAdminComponent,
-        RegisterCompanyComponent,
-        RegisterSuperAdminComponent
+        RegisterCompanyComponent
     ],
     imports:[
         RouterModule,

@@ -1,1 +1,76 @@
-<p>super-admin works!</p>
+<mat-card class="full-width">
+    <mat-card-content>
+      <button mat-button color="primary" (click)="openDialog('Add',{})">New User</button>
+      <mat-form-field style="display: inline-block;">
+        <input matInput placeholder="Search">
+      </mat-form-field>
+      <div class="mat-elevation-z8">
+        <mat-table #table [dataSource]="dataSource" matSort>
+          <!-- Position Column -->
+          <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+          </ng-container>
+        
+          <!-- Email Column -->
+          <ng-container matColumnDef="Name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Name}} </mat-cell>
+          </ng-container>
+        
+
+          <ng-container matColumnDef="Email">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Email}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="PhoneNumber">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Phone </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.PhoneNumber}} </mat-cell>
+          </ng-container>
+
+            <ng-container matColumnDef="UserRoleId">
+              <mat-header-cell *matHeaderCellDef> Role </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.UserRoleId}} </mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="Password">
+                <mat-header-cell *matHeaderCellDef> Password </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.Password}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="CompanyId">
+                <mat-header-cell *matHeaderCellDef> Assign Company </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.CompanyId}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Archive">
+                <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.Archive}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Active">
+                <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.Active}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Action">
+                <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
+                <mat-cell *matCellDef="let element"> 
+                  <a mat-raised-button color="primary" (click)="openDialog('Update',element)">Edit</a>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="Delete">
+                <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
+                <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="ArchiveUser(element.Email)">Delete</button> </mat-cell>
+              </ng-container>
+        
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>

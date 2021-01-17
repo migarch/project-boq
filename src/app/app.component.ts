@@ -16,7 +16,11 @@ export class AppComponent {
   }
 
   get isSystem(){
-    return this.user && this.user.role === Role.System;
+    return this.user && this.user.role == Role.System;
+  }
+
+  get isSuper(){
+    return this.user && this.user.role == Role.Super;
   }
 
   OnLogout(){
