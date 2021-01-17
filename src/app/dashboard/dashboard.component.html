@@ -81,3 +81,102 @@
         </div>
       </mat-card-content>
     </mat-card>
+
+    <mat-card *ngIf="isSuper" class="full-width">
+      <mat-card-content>
+        <button mat-button (click)="openProjectDialog('Add',{})" color="primary"> Add Project</button>
+        <mat-form-field style="display: inline-block;">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+        </mat-form-field>
+        <div class="mat-elevation-z8">
+          <mat-table #table [dataSource]="dataSource" matSort>
+            <!-- Position Column -->
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+            </ng-container>
+          
+            <!-- Email Column -->
+            <ng-container matColumnDef="ProjectName">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.ProjectName}} </mat-cell>
+            </ng-container>
+          
+
+            <ng-container matColumnDef="ProjectShortName">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Company Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.ProjectShortName}} </mat-cell>
+            </ng-container>
+          
+            
+            <ng-container matColumnDef="StartDate">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Phone </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.StartDate}} </mat-cell>
+            </ng-container>
+            
+            <ng-container matColumnDef="EndDate">
+                <mat-header-cell *matHeaderCellDef> Phone </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.EndDate}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="ProjectAddress">
+                <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.ProjectAddress}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="PoAmount">
+                <mat-header-cell *matHeaderCellDef> Logo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.PoAmount}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="ClientName">
+                <mat-header-cell *matHeaderCellDef> GST No </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.ClientName}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="ClientAddress">
+                <mat-header-cell *matHeaderCellDef> Company Type </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.ClientAddress}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="StructuralConsultantName">
+                <mat-header-cell *matHeaderCellDef> Total Subscription </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.StructuralConsultantName}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="StructuralConsultantAddress">
+                <mat-header-cell *matHeaderCellDef> Total Subscription </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.StructuralConsultantAddress}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="ArchitectName">
+                <mat-header-cell *matHeaderCellDef> Add User </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.ArchitectName}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="ArchitectAddress">
+                <mat-header-cell *matHeaderCellDef> Add User </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.ArchitectAddress}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="TypeOfProject">
+                <mat-header-cell *matHeaderCellDef> Add User </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.TypeOfProject}}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="Action">
+                <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
+                <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="openProjectDialog('Update',element)">Edit</button> </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Delete">
+                <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
+                <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="DeleteRecord(element.ContactEmail)">Delete</button> </mat-cell>
+              </ng-container>
+          
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>

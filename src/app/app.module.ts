@@ -18,6 +18,7 @@ import { ErrorInterceptor } from './auth/error.interceptor';
 import { MaterialModule } from './shared/angular-material.module';
 import { ConfirmationDialog } from './_modal/confirmation-dialog.component';
 import { AddSuperAdminDialog, RegisterSuperAdminComponent } from './system-admin/register-super-admin/super-admin.component';
+import { AddProjectModalComponent } from './super-admin/add-project-modal/add-project-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { AddSuperAdminDialog, RegisterSuperAdminComponent } from './system-admin
     LoginComponent,
     ConfirmationDialog,
     RegisterSuperAdminComponent,
-    AddSuperAdminDialog
+    AddSuperAdminDialog,
+    AddProjectModalComponent
     
   ],
   imports: [

@@ -1,0 +1,109 @@
+<h2 mat-dialog-title>{{ action }} Project</h2>
+<mat-dialog-content>
+            <form [formGroup]="AddProject" #projectForm="ngForm" (ngSubmit)="OnSubmit()">
+                <mat-error>
+                </mat-error>
+                <mat-grid-list cols="1">
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Project Name" [(ngModel)]="data.ProjectName" formControlName="ProjectName">
+                        <mat-error>
+                            Please provide a project name
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Project Short Name" [(ngModel)]="data.ProjectShortName" formControlName="ProjectShortName">
+                        <mat-error>
+                            Please provide a project short name
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="data" matInput [matDatepicker]="startdate" placeholder="Start Date" [(ngModel)]="data.StartDate" formControlName="StartDate">
+                            <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
+                            <mat-datepicker #startdate [calendarHeaderComponent]=""></mat-datepicker>
+                        <mat-error>
+                            Please provide a start date
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput [matDatepicker]="enddate" placeholder="End Date (Optional)" [(ngModel)]="data.EndDate" formControlName="EndDate">
+                            <mat-datepicker-toggle matSuffix [for]="enddate"></mat-datepicker-toggle>
+                            <mat-datepicker #enddate [calendarHeaderComponent]=""></mat-datepicker>
+                        <mat-error>
+                            Please provide a End Date
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <textarea matInput placeholder="Project Address" [(ngModel)]="data.ProjectAddress" formControlName="ProjectAddress"></textarea>
+                        <mat-error>
+                            Please provide a project address
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Project Amount" [(ngModel)]="data.PoAmount" formControlName="PoAmount">
+                        <mat-error>
+                            Please provide a project amount
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Client Name" [(ngModel)]="data.ClientName" formControlName="ClientName">
+                        <mat-error>
+                            Please provide a client name
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <textarea matInput placeholder="Client Address (Optional)" [(ngModel)]="data.ClientAddress" formControlName="ClientAddress"></textarea>
+                        <mat-error>
+                            Please provide a client address
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Structural Consultant Name" [(ngModel)]="data.StructuralConsultantName" formControlName="StructuralConsultantName">
+                        <mat-error>
+                            Please provide a structural consultant name
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <textarea matInput placeholder="Structural Consultant Address (Optional)" [(ngModel)]="data.StructuralConsultantAddress" formControlName="StructuralConsultantAddress"></textarea>
+                        <mat-error>
+                            Please provide a structural consultant address
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Architect Name" [(ngModel)]="data.ArchitectName" formControlName="ArchitectName">
+                        <mat-error>
+                            Please provide a architect name
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <textarea matInput placeholder="Architect Address (Optional)" [(ngModel)]="data.ArchitectAddress" formControlName="ArchitectAddress"></textarea>
+                        <mat-error>
+                            Please provide a architect address
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="width-50">
+                        <input type="text" matInput placeholder="Type Of Project" [(ngModel)]="data.TypeOfProject" formControlName="TypeOfProject">
+                        <mat-error>
+                            Please provide a type of project
+                        </mat-error>
+                    </mat-form-field>
+                    
+                    
+                </mat-grid-list>
+                <mat-dialog-actions align="end">
+                    <button mat-button mat-dialog-close color="primary" (click)="closeDialog()">Cancel</button>
+                    <button type="submit" [disabled]="projectForm.form.invalid" mat-button [mat-dialog-close]="true"  (click)="doAction()"> {{action}}</button>
+                  </mat-dialog-actions>
+            </form>
+</mat-dialog-content>

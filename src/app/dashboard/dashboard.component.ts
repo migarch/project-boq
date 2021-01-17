@@ -6,9 +6,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { first } from 'rxjs/operators';
 import { ConfirmationDialog } from 'src/app/_modal/confirmation-dialog.component';
 import { AuthenticationService } from '../services';
+import { SuperService } from '../services/super.service';
 import { SystemService } from '../services/system.service';
 import { Role, User } from '../shared';
 import { Company } from '../shared/company';
+import { Project } from '../shared/project';
+import { AddProjectModalComponent } from '../super-admin/add-project-modal/add-project-modal.component';
 import { RegisterCompanyComponent } from '../system-admin/register-company/register-company.component';
 import { AddSuperAdminDialog } from '../system-admin/register-super-admin/super-admin.component';
 
@@ -24,6 +27,7 @@ export class DashboardComponent implements OnInit {
   displayedColumns = [];
   dataSource;
   company: Company[] = [];
+  project: Project[] = [];
   dialogValue: string;
   sendValue: string;
   public RowID;
@@ -31,6 +35,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private systemService: SystemService,
+    private superService: SuperService,
     public dialog: MatDialog,
   ) {
     this.user = this.authenticationService.userValue;
@@ -59,14 +64,17 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.getCompany();
+    if(this.user.role == Role.System){
+      this.getCompany();
+    }
+    else if(this.user.role == Role.Super){
+      this.getProject();
+    }
     
   }
 
   getCompany(){
     this.loading = true;
-    if(this.user.role == Role.System){
       this.systemService.GetAllRegisterCompany()
       .pipe(first())
       .subscribe(systems =>{
@@ -76,9 +84,7 @@ export class DashboardComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.company);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
-        
       });
-    }
   }
 
   openDialog(action, obj){
@@ -124,4 +130,46 @@ export class DashboardComponent implements OnInit {
       this.dataSource.paginator.firstPage;
     }
   }
+
+  // Super Admin
+
+  getProject(){
+    this.loading = true;
+    this.superService.getProject()
+    .pipe(first())
+    .subscribe(resPro => {
+      console.log(resPro);
+      this.loading = false;
+      this.project = resPro;
+      this.displayedColumns = ['ProjectName','StartDate','EndDate','ClientName','ArchitectName','TypeOfProject','Action','Delete'];
+      this.dataSource = new MatTableDataSource(this.project);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    })
+  }
+
+  openProjectDialog(action, obj){
+    obj.action = action;
+    const dialogRef = this.dialog.open(AddProjectModalComponent,{
+      data:obj
+    });
+    dialogRef.afterClosed().subscribe(result =>{
+      if(result.event == 'Add'){
+        this.addRowData(result.data);
+      }else if(result.event == 'Update'){
+        this.updateRowData(result.data);
+      }
+    });
+  }
+
+  addRowData(row_obj){
+    this.getProject();
+  }
+
+  updateRowData(row_obj){
+
+  }
+
+  
+
 }
