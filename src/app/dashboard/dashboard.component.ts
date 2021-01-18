@@ -28,18 +28,14 @@ export class DashboardComponent implements OnInit {
   dataSource;
   company: Company[] = [];
   project: Project[] = [];
-  dialogValue: string;
-  sendValue: string;
-  public RowID;
   
   constructor(
     private authenticationService: AuthenticationService,
     private systemService: SystemService,
     private superService: SuperService,
-    public dialog: MatDialog,
-  ) {
+    public dialog: MatDialog) {
     this.user = this.authenticationService.userValue;
-   }
+    }
 
   get isSystem(){
     return this.user && this.user.role == Role.System;
@@ -52,34 +48,15 @@ export class DashboardComponent implements OnInit {
   @ViewChild(MatPaginator, { static:true}) paginator:MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  onRegister(){
-   
-    const dialogRef = this.dialog.open(RegisterCompanyComponent,{
-      data: { pageValue: this.sendValue},
-    });
+  // System admin related
 
-    dialogRef.afterClosed().subscribe(result =>{
-      this.dialogValue = result.data;
-    });
-  }
-
-  ngOnInit(): void {
-    if(this.user.role == Role.System){
-      this.getCompany();
-    }
-    else if(this.user.role == Role.Super){
-      this.getProject();
-    }
-    
-  }
-
-  getCompany(){
+  public getCompany(){
     this.loading = true;
       this.systemService.GetAllRegisterCompany()
       .pipe(first())
-      .subscribe(systems =>{
+      .subscribe(resp =>{
         this.loading = false;
-        this.company = systems;
+        this.company = resp;
         this.displayedColumns = ['ContactEmail', 'CompanyName','ContactPhone','CompanyType','AddUser' ,'Edit','Delete'];
         this.dataSource = new MatTableDataSource(this.company);
         this.dataSource.sort = this.sort;
@@ -87,23 +64,41 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  openDialog(action, obj){
+  onRegisterCompany(action, obj){
     obj.action = action;
-    const dialogRef = this.dialog.open(AddSuperAdminDialog,{
+    const dialogRef = this.dialog.open(RegisterCompanyComponent,{
       data:obj
+    });
+    dialogRef.afterClosed().subscribe(result =>{
+      if(result.event == 'Add'){
+        this.addCompanyData(result.data);
+      }else if(result.event == 'Update'){
+        this.updateCompanyData(result.data);
+      }
     });
   }
 
-  getRecord(row){
-    const dialogConfi = new MatDialogConfig();
-    dialogConfi.disableClose = true;
-    dialogConfi.autoFocus = true;
-    dialogConfi.data = row ;
-    const dialogRef = this.dialog.open(RegisterCompanyComponent, dialogConfi);
+  addCompanyData(row_obj){
+    this.systemService.RegisterCompany(row_obj)
+    .pipe(first())
+    .subscribe({
+      next:() =>{
+        this.getCompany();
+      }
+    });
   }
 
-  DeleteRecord(ContactEmail){
-    const sendEmail = {email:ContactEmail};
+  updateCompanyData(row_obj){
+    this.systemService.UpdateComapny(row_obj)
+    .pipe(first())
+    .subscribe({
+      next:() =>{
+        this.getCompany();
+      }
+    });
+  }
+
+  deleteCompany(id){
     const dialogRef = this.dialog.open(ConfirmationDialog,{
       data:{
         message: 'Are you sure want to delete?',
@@ -115,23 +110,23 @@ export class DashboardComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((confirmed: boolean) =>{
-      if(confirmed){
-        this.systemService.ArchiveCompany(ContactEmail);
-        this.getCompany();
+      if(confirmed == true){
+        this.systemService.ArchiveCompany(id); 
       }
   });
     
 
   }
 
-  applyFilter(fiterValue: string){
-    this.dataSource.filter = fiterValue.trim().toLowerCase();
-    if(this.dataSource.paginator){
-      this.dataSource.paginator.firstPage;
-    }
+  // add super admin dialog
+  openDialog(action, obj){
+    obj.action = action;
+    const dialogRef = this.dialog.open(AddSuperAdminDialog,{
+      data:obj
+    });
   }
 
-  // Super Admin
+  // Super Admin related code
 
   getProject(){
     this.loading = true;
@@ -154,18 +149,18 @@ export class DashboardComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result =>{
       if(result.event == 'Add'){
-        this.addRowData(result.data);
+        this.addProjectData(result.data);
       }else if(result.event == 'Update'){
-        this.updateRowData(result.data);
+        this.updateProjectData(result.data);
       }
     });
   }
 
-  addRowData(row_obj){
+  addProjectData(row_obj){
     this.getProject();
   }
 
-  updateRowData(row_obj){
+  updateProjectData(row_obj){
     this.superService.updateProject();
   }
 
@@ -190,6 +185,21 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  
+  ngOnInit(): void {
+    if(this.user.role == Role.System){
+      this.getCompany();
+    }
+    else if(this.user.role == Role.Super){
+      this.getProject();
+    }
+    
+  }
+
+  applyFilter(fiterValue: string){
+    this.dataSource.filter = fiterValue.trim().toLowerCase();
+    if(this.dataSource.paginator){
+      this.dataSource.paginator.firstPage;
+    }
+  }
 
 }

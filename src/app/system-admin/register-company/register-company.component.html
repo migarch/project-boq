@@ -1,69 +1,69 @@
-<h2 mat-dialog-title>Register Company</h2>
+<h2 mat-dialog-title>{{action}} Company</h2>
 <mat-dialog-content>
    
-            <form [formGroup]="RegiCompany" #registerForm="ngForm" (ngSubmit)="OnSubmit()">
+            <form [formGroup]="RegiCompany" #registerForm="ngForm">
                 <mat-error>
                     {{ error }}
                 </mat-error>
                 <mat-grid-list cols="1">
                     <mat-form-field appearance="fill" class="width-50">
-                        <input type="text" matInput placeholder="Email" formControlName="ContactEmail" required>
+                        <input type="text" matInput placeholder="Email" [(ngModel)]="local_data.ContactEmail" formControlName="ContactEmail">
                         <mat-error>
                             Please provide a valid email address
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="width-50 ml-2">
-                        <input type="text" matInput placeholder="Company Name" formControlName="CompanyName" required>
+                        <input type="text" matInput placeholder="Company Name" [(ngModel)]="local_data.CompanyName" formControlName="CompanyName">
                         <mat-error>
                             Please provide a company name
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="width-50">
-                        <input type="number" matInput placeholder="Phone Number" formControlName="ContactPhone" required>
+                        <input type="number" matInput placeholder="Phone Number" [(ngModel)]="local_data.ContactPhone" formControlName="ContactPhone">
                         <mat-error>
                             Please provide a phone Number
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="width-50 ml-2">
-                        <textarea matInput placeholder="Company Address" formControlName="CompanyHOAddres" required></textarea>
+                        <textarea matInput placeholder="Company Address" [(ngModel)]="local_data.CompanyHOAddres" formControlName="CompanyHOAddres"></textarea>
                         <mat-error>
                             Please provide a company address
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="width-50">
-                        <textarea matInput placeholder="Project Location" formControlName="CompanyProjectOffi" required></textarea>
+                        <textarea matInput placeholder="Project Location" [(ngModel)]="local_data.CompanyProjectOffi" formControlName="CompanyProjectOfﬁ"></textarea>
                         <mat-error>
                             Please provide a project location
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="width-50 ml-2">
-                        <input type="text"  matInput placeholder="Company Logo" formControlName="CompanyLogo" required>
+                        <input type="text"  matInput placeholder="Company Logo" [(ngModel)]="local_data.CompanyLogo" formControlName="CompanyLogo">
                         <mat-error>
                             Please provide a company logo
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="width-50">
-                        <input type="text"  matInput placeholder="Company GST" formControlName="CompanyGST" required>
+                        <input type="text"  matInput placeholder="Company GST" [(ngModel)]="local_data.CompanyGST" formControlName="CompanyGST">
                         <mat-error>
                             Please provide a company GST
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="width-50 ml-2">
-                        <input type="text"  matInput placeholder="Company Type" formControlName="CompanyType" required>
+                        <input type="text"  matInput placeholder="Company Type" [(ngModel)]="local_data.CompanyType" formControlName="CompanyType">
                         <mat-error>
                             Please provide a company GST
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="fill" class="width-50" style="display: block;">
-                        <input type="text"  matInput placeholder="Company Sub" formControlName="ProjectSubscription" required>
+                        <input type="text"  matInput placeholder="Company Sub" [(ngModel)]="local_data.ProjectSubscription" formControlName="ProjectSubscription">
                         <mat-error>
-                            Please provide a company Sub
+                            Please provide a Project Subscription
                         </mat-error>
                     </mat-form-field>
                 </mat-grid-list>
                 <mat-dialog-actions align="end">
-                    <button mat-button mat-dialog-close color="primary">Cancel</button>
-                    <button type="submit" [disabled]="registerForm.form.invalid" mat-button [mat-dialog-close]="true" color="primary">Add Company</button>
+                    <button mat-button mat-dialog-close color="primary" (click)="closeDialog()">Cancel</button>
+                    <button type="submit" [disabled]="registerForm.form.invalid" mat-button [mat-dialog-close]="true" color="primary" (click)="doAction()">{{action}}</button>
                   </mat-dialog-actions>
             </form>
 </mat-dialog-content>

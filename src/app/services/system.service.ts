@@ -10,21 +10,25 @@ export class SystemService{
         private http: HttpClient,
     ){ }
 
-    RegisterCompany(company: Company){
-        return this.http.post<any>(`${environment.apiUrl}/api/add_company`, company);
+    RegisterCompany(row_obj){
+        return this.http.post<any>(`${environment.apiUrl}/api/add_company`, row_obj);
     }
 
     GetAllRegisterCompany(){
        return this.http.get<any>(`${environment.apiUrl}/api/fetch_company`);
     }
 
-    ArchiveCompany(ContactEmail){
+    UpdateComapny(row_obj){
+      return this.http.put<any>(`${environment.apiUrl}/api/update_company`, row_obj);
+    }
+
+    ArchiveCompany(id){
         const options = {
             headers: new HttpHeaders({
               'Content-Type': 'application/json',
             }),
             body: {
-              email: ContactEmail,
+              company_id: id,
             },
           };
         this.http.delete<any>(`${environment.apiUrl}/api/archive_company`,options)

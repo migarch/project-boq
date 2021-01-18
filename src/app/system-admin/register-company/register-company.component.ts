@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { first } from 'rxjs/operators';
-import { SystemService } from 'src/app/services/system.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Company } from 'src/app/shared/company';
 
 @Component({
   selector: 'app-register-company',
@@ -13,23 +12,33 @@ export class RegisterCompanyComponent implements OnInit {
   RegiCompany: FormGroup;
   submitted = false;
   error = '';
+  action:string;
+  local_data:any;
 
   constructor(
+    public dialogRef: MatDialogRef<RegisterCompanyComponent>,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private systemService: SystemService,
-  ) { }
-  
-  
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: Company
+  ) {
+    this.local_data = {...data};
+    this.action = this.local_data.action;
+   }
+   
+   doAction(){
+    this.dialogRef.close({event:this.action,data:this.local_data});
+   }
 
+   closeDialog(){
+     this.dialogRef.close({event:'Cancel'})
+   }
+  
   ngOnInit(): void {
     this.RegiCompany = this.formBuilder.group({
       ContactEmail:['', Validators.email],
       CompanyName:['', Validators.required],
       ContactPhone:['', Validators.required],
       CompanyHOAddres:['', Validators.required],
-      CompanyProjectOffi:['', Validators.required],
+      CompanyProjectOfﬁ:['', Validators.required],
       CompanyLogo:['', Validators.required],
       CompanyGST:['', Validators.required],
       CompanyType:['', Validators.required],
@@ -39,22 +48,5 @@ export class RegisterCompanyComponent implements OnInit {
   }
 
   get f() { return this.RegiCompany.controls; }
-
-  OnSubmit(){
-    this.submitted = true;
-    if (this.RegiCompany.invalid) {
-      return;
-    }
-    this.systemService.RegisterCompany(this.RegiCompany.value)
-    .pipe(first())
-    .subscribe({
-      next:() =>{
-          this.router.navigate(['/'], { relativeTo: this.route});
-      },
-      error: error =>{
-        this.error = error;
-      }
-    })
-  }
 
 }
