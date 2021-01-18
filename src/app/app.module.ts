@@ -19,6 +19,7 @@ import { MaterialModule } from './shared/angular-material.module';
 import { ConfirmationDialog } from './_modal/confirmation-dialog.component';
 import { AddSuperAdminDialog, RegisterSuperAdminComponent } from './system-admin/register-super-admin/super-admin.component';
 import { AddProjectModalComponent } from './super-admin/add-project-modal/add-project-modal.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -48,8 +49,10 @@ import { AddProjectModalComponent } from './super-admin/add-project-modal/add-pr
   providers: [
     {provide: APP_INITIALIZER, useFactory:appInitializer, multi:true, deps:[AuthenticationService]},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi:true},
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true}
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi:true},
+    // {provide: MAT_DATE_LOCALE, useValue: 'fr-CA'}
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

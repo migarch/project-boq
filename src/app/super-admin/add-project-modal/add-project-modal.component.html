@@ -19,18 +19,18 @@
                     </mat-form-field>
 
                     <mat-form-field appearance="fill" class="width-50">
-                        <input type="data" matInput [matDatepicker]="startdate" placeholder="Start Date" [(ngModel)]="data.StartDate" formControlName="StartDate">
+                        <input matInput matInput [matDatepicker]="startdate" placeholder="Start Date" [(ngModel)]="data.StartDate" formControlName="StartDate">
                             <mat-datepicker-toggle matSuffix [for]="startdate"></mat-datepicker-toggle>
-                            <mat-datepicker #startdate [calendarHeaderComponent]=""></mat-datepicker>
+                            <mat-datepicker #startdate></mat-datepicker>
                         <mat-error>
                             Please provide a start date
                         </mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="fill" class="width-50">
-                        <input type="text" matInput [matDatepicker]="enddate" placeholder="End Date (Optional)" [(ngModel)]="data.EndDate" formControlName="EndDate">
+                        <input matInput type="text" matInput [matDatepicker]="enddate" placeholder="End Date (Optional)" [(ngModel)]="data.EndDate" formControlName="EndDate">
                             <mat-datepicker-toggle matSuffix [for]="enddate"></mat-datepicker-toggle>
-                            <mat-datepicker #enddate [calendarHeaderComponent]=""></mat-datepicker>
+                            <mat-datepicker #enddate></mat-datepicker>
                         <mat-error>
                             Please provide a End Date
                         </mat-error>

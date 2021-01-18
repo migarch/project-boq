@@ -1,9 +1,11 @@
+import { DatePipe } from "@angular/common";
+
 export class Project{
     id:string;
     ProjectName: string;
     ProjectShortName: string;
-    StartDate:Date;
-    EndDate:Date;
+    StartDate:string;
+    EndDate:string;
     ProjectAddress:string;
     PoAmount:string;
     ClientName:string;

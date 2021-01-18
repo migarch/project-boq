@@ -138,7 +138,6 @@ export class DashboardComponent implements OnInit {
     this.superService.getProject()
     .pipe(first())
     .subscribe(resPro => {
-      console.log(resPro);
       this.loading = false;
       this.project = resPro;
       this.displayedColumns = ['ProjectName','StartDate','EndDate','ClientName','ArchitectName','TypeOfProject','Action','Delete'];
@@ -167,6 +166,27 @@ export class DashboardComponent implements OnInit {
   }
 
   updateRowData(row_obj){
+    this.superService.updateProject();
+  }
+
+  deleteProject(id){
+    const dialogRef = this.dialog.open(ConfirmationDialog,{
+      data:{
+        message: 'Are you sure want to delete?',
+        buttonText:{
+          ok:'Sure',
+          cancel: 'No'
+        }
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) =>{
+      if(confirmed){
+        this.superService.archiveProject(id);
+        this.getProject();
+      }
+  });
+    
 
   }
 
