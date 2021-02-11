@@ -25,6 +25,9 @@ export class ProjectDetailsComponent implements OnInit {
   buildingDetails: Building[] = [];
   buildingItem: Items[] = [];
   lineitems: any[] = [];
+  projectDetails:any[] = [];
+  ProjectName:string;
+  ItemShortCodeType:string;
   projectId = {};
   getBuildingId = {};
   addBulding: FormGroup;
@@ -50,6 +53,12 @@ export class ProjectDetailsComponent implements OnInit {
     .pipe(first())
     .subscribe(resp =>{
       this.buildingDetails = resp;
+        this.projectService.getProjectDetails(params)
+        .pipe(first())
+        .subscribe(resp =>{
+          this.projectDetails = resp;
+          this.ProjectName = this.projectDetails[0]['ProjectName'];
+        })
     });
   }
 
@@ -92,9 +101,9 @@ export class ProjectDetailsComponent implements OnInit {
     if(this.addItems.invalid){
       return;
     }
-    let sortcode = {ItemShortCode:'A'};
-   
-    const row_obj = [this.addItems.value, this.getBuildingId, sortcode];
+    let sortcode = {ItemShortCode:null};
+    let ItemShortCodeType = {ItemShortCodeType:this.projectDetails[0]['ItemShortCodeType']};
+    const row_obj = [this.addItems.value, this.getBuildingId, sortcode, ItemShortCodeType];
     let params = this.getBuildingId;
     this.projectService.addBuildingItems(row_obj)
     .pipe(first())
@@ -196,6 +205,7 @@ export class ProjectDetailsComponent implements OnInit {
 
   slectAndItems(action, obj){
     obj.action = action;
+    obj.ItemShortCodeType = this.projectDetails[0]['ItemShortCodeType'];
     obj.projectId = this.projectId;
     obj.BuildingId = this.getBuildingId['building_id'];
     const dialogRef = this.dialog.open(CopyItemsComponent,{
@@ -213,7 +223,6 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.copySelectedItem(row_obj)
     .pipe(first())
     .subscribe(resp =>{
-      console.log(resp);
       let parmas = this.getBuildingId;
       this.buildingList(parmas);
     });

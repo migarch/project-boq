@@ -11,6 +11,11 @@ export class ProjectService{
         return this.http.get<any>(`${environment.apiUrl}/api/fetch_building`,{params})
     }
 
+    getProjectDetails(params){
+        return this.http.get<any>(`${environment.apiUrl}/api/fetch_project_details`,{params})
+        
+    }
+
     addBuilding(row_obj){
         return this.http.post<any>(`${environment.apiUrl}/api/add_building`, row_obj)
     }
