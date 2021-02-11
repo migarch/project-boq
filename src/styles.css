@@ -1,0 +1,102 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.mat-drawer-container{
+  background: #ffffff;
+}
+.width-50{width: 49%;}
+.ml-1{margin-left: 1%;}
+.ml-2{margin-left: 2%;}
+.width-100{width: 100%;}
+.width-25{width: 25%;}
+
+.close-button{
+    float: right;
+    top:-24px;
+    right:-24px;
+  }
+  
+  .close-icon {
+    transition: 1s ease-in-out;
+  }
+  
+  .close-icon:hover {
+    transform: rotate(180deg);
+  }
+  
+  ::ng-deep .icon-outside .close-button{
+    float: right;
+    top:-52px;
+    right:-52px;
+  }
+  
+  ::ng-deep .icon-outside .mat-dialog-container {
+   overflow: unset
+  }
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    cursor: pointer;
+    padding: 4px;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+  }
+
+  .btn-green{
+    background: green;
+    color: #ffffff;
+  }
+  .material-icons.archive { color: red;}
+  .material-icons.edit { color: blue;}
+  .mat-card{
+    border-radius: 0px !important;
+  }
+
+  .mat-toolbar.mat-primary{
+    background: darkcyan !important;
+  }
+
+  .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary{
+    background: darkcyan !important;
+  }
+  .mat-drawer{
+    background: rgb(191 196 197);
+  }
+
+  .mat-list-base .mat-list-item{
+    color: #1f8b8b !important;
+  }
+  .mat-list-base .mat-list-item .mat-list-item-content{
+    border-bottom: 1px solid #a9a9a9a1;;
+  }
+  .mat-list-base{
+    padding-top: 0px !important;
+  }
+  .mat-drawer-side{
+    border-right: solid 1px rgb(31 139 139) !important;
+  }
+  .mat-menu-panel{
+    background: #ffffff !important;
+  }
+  .mat-menu-item .mat-icon-no-color{
+    color: #1f8b8b !important;
+  }
+  .mat-menu-item{
+    color: #1f8b8b !important;
+  }

@@ -1,0 +1,75 @@
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches" *ngIf="user">
+    <mat-toolbar color="primary" class="example-toolbar">
+        <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+        <span class="example-app-name">SQ-Feet</span>
+
+
+        <span class="example-spacer"></span>
+        <span>{{ useremail }}</span>
+        <button mat-icon-button [matMenuTriggerFor]="auth">
+            <mat-icon> account_circle </mat-icon>
+        </button>
+        <mat-menu #auth="matMenu">
+            <button mat-menu-item>
+                <mat-icon> settings </mat-icon>
+                <span>Profile</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon> admin_panel_settings </mat-icon>
+                <span>Password Reset</span>
+            </button>
+            <button mat-menu-item (click)="onLogout()">
+                <mat-icon> exit_to_app </mat-icon>
+                <span> Logout </span>
+            </button>
+            
+        </mat-menu>
+    </mat-toolbar>
+
+
+    <mat-sidenav-container  class="example-sidenav-container"
+                            [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                            [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+            <mat-nav-list>
+                <span *ngFor="let item of getMenuList">
+                <span *ngIf="item.children && item.children.length > 0">
+                    <mat-accordion>
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <div fxLayout="row" class="display-content" fxLayoutAlign="space-between center" > 
+                                    <mat-icon>{{item.iconName}}</mat-icon>
+                                    {{item.displayName}}
+                                </div>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <span *ngFor="let child of item.children">
+                            <mat-list-item [routerLink]="child.route" class="active">
+                                <div fxLayout="row" class="display-content" fxLayoutAlign="space-between center" > 
+                                    <mat-icon>{{child.iconName}}</mat-icon>
+                                    {{child.displayName}}
+                                </div>
+                            </mat-list-item>
+                        </span>
+                    </mat-expansion-panel>
+                    </mat-accordion>
+                </span>
+                <span *ngIf="!item.children || item.children.length === 0;">
+                    <mat-list-item [routerLink]="item.route">
+                        <div fxLayout="row" class="display-content" fxLayoutAlign="space-between center">
+                            <mat-icon>{{item.iconName}}</mat-icon>
+                            {{item.displayName}}
+                        </div>
+                    </mat-list-item>
+                </span>
+                </span>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+
+    </mat-sidenav-container>
+</div>
+<app-login *ngIf="!user"></app-login>

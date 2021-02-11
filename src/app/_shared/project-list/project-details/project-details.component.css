@@ -1,0 +1,131 @@
+mat-card{
+  padding: 0px;
+}
+
+mat-card-header{
+  border-bottom: 1px solid #61abdd;
+  background: #b5dddd;
+  height: 60px;
+}
+
+.containerX {
+  box-sizing: content-box !important;
+}
+
+div.container {
+  display: flex;
+}
+
+div.addButton{
+  position:absolute;
+  right: 0;
+  margin: 5px 20px;
+}
+div.copyButton{
+  position:absolute;
+  left: 0;
+  margin: 5px 20px;
+}
+
+.cancelButton{
+  margin-left: 5px;
+}
+
+.mat-button-disabled{
+  cursor:not-allowed;
+}
+
+
+div.mat-subtitle{
+  position: absolute;
+  margin: 12px 20px;
+  left: 0;
+}
+div.mat-subtitle h3{
+  color: #1f8b8b;
+}
+button.ml-2{
+  margin-left: 5px;
+}
+
+.container div[ng-reflect-flex*=calc] {
+  
+}
+
+.inner-subtitle{
+  padding: 8px 16px;
+}
+.main-card{
+  width: 100%;
+  height: 100%;
+  position: relative;;
+  overflow: hidden;
+  background: #ffffff;
+  padding:0px;
+}
+.main-header{
+  background: #61abdd;
+  padding: 8px 0px;
+}
+
+.bulding-card {
+    /* width: 100%;
+    max-width: 25%; */
+    min-height: 100vh;
+    border-right: 1px solid #1f8b8b;
+    background: #ffffff;
+    /* margin-right: 4px; */
+  }
+
+  .bulding-select{
+    min-width: 250px !important;
+  }
+
+  .bulding-list{
+    min-width: 200px;
+  }
+
+  .mat-list-single-selected-option, .mat-list-single-selected-option:hover, .mat-list-single-selected-option:focus{
+    background: #61abd2 !important;
+  }
+
+  .items-card{
+    
+    min-height: 100vh;
+    border-right: 1px solid #1f8b8b;
+    background: #ffffff;
+    /* margin-right: 4px; */
+  }
+  input{
+    color: black;
+  } 
+
+  .itemlist-card{
+    /* width: 100%;
+    max-width: 41.7%; */
+    min-height: 100vh;
+    background: #ffffff;
+  }
+
+  .mat-icon-clor{
+    color: #1f8b8b;
+  }
+
+  .addDiv{
+    height: 100%;
+    background: rgb(0 0 0 / 14%);
+    padding: 12px;
+    border-radius: 4px;
+    margin: 4px;
+  }
+  .addDiv2{
+    height: 100%;
+    background: rgb(0 0 0 / 14%);
+    padding: 12px;
+    border-radius: 4px;
+    margin: 4px;
+  }
+  .b-add-button{
+    /* margin-left: 200px; */
+    /* float: right; */
+  }

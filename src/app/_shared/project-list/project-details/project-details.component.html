@@ -1,0 +1,165 @@
+<mat-card class="main-card">
+    <mat-card-header class="main-header">
+        <mat-card-title>
+            Project Name
+        </mat-card-title>
+        <mat-card-subtitle>
+            Proejct Details
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div style="width: 100%; display: inline-flex; position: relative;">
+        <div class="width-25">
+            <mat-card class="bulding-card">
+                <mat-card-header>
+                <mat-card-subtitle class="inner-subtitle">
+                    <div class="containerX">
+                        <div class="container">
+                            <div class="copyButton">
+                                <button mat-raised-button mat-button color="primary" (click)="toggleAdd('addDiv')">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-subtitle>
+                </mat-card-header>
+                <div [@slideInOut]="animationState" class="addDiv" >
+                    <form [formGroup]="addBulding" (ngSubmit)="sendBuildingData()">
+                        <mat-form-field class="width-50">
+                            <mat-label>Building Sortcode</mat-label>
+                            <input matInput type="text" formControlName="BuildingShortCode" placeholder="">
+                        </mat-form-field>
+                        <mat-form-field class="width-50 ml-2">
+                            <mat-label>Building Name</mat-label>
+                            <input matInput type="text" formControlName="BuildingName" placeholder="">
+                            <mat-error>Required</mat-error>
+                        </mat-form-field>
+                        <span class="b-add-button">
+                            <button [disabled]="!this.addBulding.valid" align="end" mat-button mat-raised-button color="primary">Insert</button>
+                            <button class="cancelButton" mat-button mat-raised-button color="cancel" (click)="reset()">Cancel</button>
+                        </span>
+                    </form>
+                </div>
+                <mat-card-content>
+                    <mat-selection-list class="bulding-select" #shoes [multiple]="false" (selectionChange)="getBuildingList($event)">
+                        <mat-list-option class="bulding-list" *ngFor="let building of buildingDetails" [value]="building.id">
+                        <span>({{building.BuildingShortCode}}) | {{building.BuildingName}}
+                                <mat-hint align="end">
+                                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                                        <mat-icon class="mat-icon-clor">more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button mat-menu-item>
+                                        <mat-icon>edit</mat-icon>
+                                        <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </mat-menu>
+                                </mat-hint>
+                        </span>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="width-25">
+            <mat-card class="items-card">
+                <mat-card-header>
+                    <mat-card-subtitle class="inner-subtitle">
+                        <div class="containerX">
+                            <div class="container">
+                                <div class="copyButton">
+                                    <button [disabled]="!disabledAddItem" mat-raised-button mat-button color="primary" (click)="toggleAdd('addDiv2')">
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                    <button class="ml-2" [disabled]="!disabledAddItem" (click)="slectAndItems('Select',{})" mat-raised-button mat-button color="primary">
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <div [@slideInOut]="animationState2" class="addDiv2" >
+                    <form [formGroup]="addItems" (ngSubmit)="sendItemsData()">
+                        <mat-form-field class="width-100">
+                            <mat-label>Item Name</mat-label>
+                            <input matInput type="text" formControlName="ItemsName" placeholder="Item Name">
+                        </mat-form-field>
+                        <button [disabled]="this.addItems.invalid" align="end" mat-button mat-raised-button color="primary">Insert</button>
+                        <button class="cancelButton" mat-button mat-raised-button (click)="reset2()">Cancel</button>
+                    </form>
+                </div>
+                <mat-card-content>
+                    <mat-selection-list class="bulding-select" class="" #item [multiple]="false" (selectionChange)="getItemId($event)">
+                        <mat-list-option class="bulding-list" *ngFor="let items of buildingItem" [value]="items.id">
+                            <span>({{items.ItemShortCode}}) {{items.ItemName}}
+                            <mat-hint>
+                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                    <mat-icon class="mat-icon-clor">more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item>
+                                    <mat-icon>edit</mat-icon>
+                                    <mat-icon>delete</mat-icon>
+                                    </button>
+                                </mat-menu>
+                            </mat-hint></span>
+                        </mat-list-option>
+                    </mat-selection-list>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="width-50" style="width: 50%;">
+            <mat-card class="itemlist-card">
+                <mat-card-header>
+                    <mat-card-subtitle class="inner-subtitle">
+                        <div class="containerX">
+                            <div class="container">
+                                <div class="copyButton">
+                                    <button [disabled]="!disabledAddLineItems" (click)="toggleAdd('addDiv3')" mat-raised-button mat-button color="primary">
+                                        <mat-icon>add</mat-icon>
+                                    </button>
+                                    <button [disabled]="!disabledCopyLineItem" class="ml-2" (click)="selectLineItems('Select',{})" mat-raised-button mat-button color="primary">
+                                        <mat-icon>content_copy</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <div *ngFor="let items of lineitems">
+                        <table>
+                            <tr>
+                                <td><h4 contenteditable="true" style="color:#1f8b8b">{{items.lineitem.ShortCode}}</h4></td>
+                                <td><h4 contenteditable="true" style="color:#1f8b8b">{{items.lineitem.LineItemDescription}}</h4></td>
+                                <td><section><mat-checkbox [checked]="!items.lineitem.IsSubLineItem === true" (change)="show = !show"><span style="color: #1f8b8b;">Sub Line</span></mat-checkbox></section></td>
+                                <td  *ngIf="show"><h4 contenteditable="true" style="color:#1f8b8b">{{items.lineitem.Qty}}</h4></td>
+                                <td  *ngIf="show"><h4 contenteditable="true" style="color:#1f8b8b">{{items.lineitem.Unit}}</h4></td>
+                                <td  *ngIf="show"><h4 contenteditable="true" style="color:#1f8b8b">{{items.lineitem.Rate}}</h4></td>
+                                <td  *ngIf="show"><h4 contenteditable="true" style="color:#1f8b8b">{{items.lineitem.Amount}}</h4></td>
+                                <td  *ngIf="show"><h4 contenteditable="true" style="color:#1f8b8b">{{items.lineitem.Remarks}}</h4></td>
+                            </tr>  
+                        </table>
+                        <table *ngIf="!show">
+                            <tr *ngFor="let subline of items.sublineitems">
+                                <td style="color:#1f8b8b">{{subline.ShortCode}}</td>
+                                <td style="color:#1f8b8b">{{subline.LineItemDescription}}</td>
+                                <td style="color:#1f8b8b">{{subline.Qty}}</td>
+                                <td style="color:#1f8b8b">{{subline.Unit}}</td>
+                                <td style="color:#1f8b8b">{{subline.Rate}}</td>
+                                <td style="color:#1f8b8b">{{subline.Amount}}</td>
+                                <td style="color:#1f8b8b">{{subline.Remarks}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        </div>
+
+    </mat-card-content>
+ </mat-card>
+  

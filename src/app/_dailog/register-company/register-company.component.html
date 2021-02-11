@@ -1,0 +1,86 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+    <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+<h2 mat-dialog-title>{{action}} Company</h2>
+<form [formGroup]="comanyDetails">
+  <mat-horizontal-stepper linear #stepper formArrayName="formArray">
+
+    <mat-step formGroupName="0" [stepControl]="formArray?.get([0])">
+        <ng-template matStepLabel>Company Info</ng-template>
+        <mat-form-field class="width-50" style="display: none;">
+          <mat-label>Company Name</mat-label>
+          <input matInput type="text" formControlName="id" required>
+        </mat-form-field>
+        <mat-form-field class="width-50">
+          <mat-label>Company Name</mat-label>
+          <input matInput type="text" formControlName="CompanyName" required>
+        </mat-form-field>
+        <mat-form-field class="width-50 ml-2">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="ContactEmail" required>
+        </mat-form-field>
+        <mat-form-field class="width-50">
+          <mat-label>Phone</mat-label>
+          <input matInput type="number" formControlName="ContactPhone" required>
+        </mat-form-field>
+        <mat-form-field class="width-50 ml-2">
+          <mat-label>Company Address</mat-label>
+          <textarea matInput formControlName="CompanyHOAddres"></textarea>
+        </mat-form-field>
+        <div>
+          <button mat-button [mat-dialog-close]="true">Cancel</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+    </mat-step>
+
+    <mat-step formGroupName="1" [stepControl]="formArray?.get([1])">
+        <ng-template matStepLabel>Other details</ng-template>
+        <mat-form-field class="width-50">
+          <mat-label>Company Type</mat-label>
+          <input matInput formControlName="CompanyType" required>
+        </mat-form-field>
+        <mat-form-field class="width-50 ml-2">
+          <mat-label>Project Subscription</mat-label>
+          <input matInput type="number" formControlName="ProjectSubscription" required>
+        </mat-form-field>
+        <mat-form-field class="width-50">
+          <mat-label>Company Project Office</mat-label>
+          <textarea matInput formControlName="CompanyProjectOffi" placeholder="(Optional)"></textarea>
+        </mat-form-field>
+        <mat-form-field class="width-50 ml-2">
+          <mat-label>Company GST Number</mat-label>
+          <input matInput type="text" formControlName="CompanyGST">
+        </mat-form-field>
+        <div>
+          <button mat-button [mat-dialog-close]="true">Cancel</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+    </mat-step>
+
+    <mat-step formGroupName="2" [stepControl]="formArray?.get([2])">
+        <ng-template matStepLabel>Uplaod</ng-template>
+        <mat-form-field class="width-100">
+          <mat-label>Uplaod Profile Image</mat-label>
+          <input matInput type="text" formControlName="CompanyLogo" placeholder="(Optional)">
+        </mat-form-field>
+        <div>
+          <button mat-button [mat-dialog-close]="true">Cancel</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <p>You are now done.</p>
+      <div>
+          <button mat-button [mat-dialog-close]="true">Cancel</button>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="doAction()">{{action}}</button>
+      </div>
+    </mat-step>
+    
+  </mat-horizontal-stepper>
+</form>
+

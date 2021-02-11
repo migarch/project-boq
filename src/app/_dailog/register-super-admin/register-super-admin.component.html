@@ -1,0 +1,85 @@
+        <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+            <mat-icon class="close-icon" color="warn">close</mat-icon>
+        </button>
+        <h2 mat-dialog-title>{{ action }} Super Admin</h2>
+        <mat-dialog-content>
+
+            <mat-horizontal-stepper linear #stepper>
+                <mat-step [stepControl]="UserDetails">
+                    <form [formGroup]="UserDetails">
+                      <ng-template matStepLabel>User Details</ng-template>
+                      <mat-form-field class="width-50">
+                        <input type="text" matInput placeholder="Name" [(ngModel)]="local_data.Name" formControlName="Name" required>
+                        <mat-error>Please provide a name </mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="width-50 ml-2">
+                        <input type="tel" matInput placeholder="Phone" [(ngModel)]="local_data.PhoneNumber" formControlName="PhoneNumber" required>
+                        <mat-error>Please provide a valid number </mat-error>
+                      </mat-form-field>
+                      <div>
+                        <button mat-button [mat-dialog-close]="true">Cancel</button>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                      </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="Credentials">
+                    <form [formGroup]="Credentials">
+                      <ng-template matStepLabel>Credentials</ng-template>
+                      <mat-form-field class="width-50">
+                        <input type="email" matInput placeholder="Email" [(ngModel)]="local_data.Email" class="width-50" formControlName="Email">
+                        <mat-hint align="end" *ngIf="Credentials.get('Email').pending">searching</mat-hint>
+                        <mat-error *ngIf="Credentials.get('Email').errors?.emailExist">Email Exist</mat-error>
+                      </mat-form-field>
+                      <mat-form-field class="width-50 ml-2">
+                        <input type="password" [type]="hide ? 'password' : 'text'" matInput placeholder="Password" [(ngModel)]="local_data.Password" formControlName="Password" required>
+                        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                        <mat-error>Please provide a password </mat-error>
+                      </mat-form-field>
+                      <div>
+                        <button mat-button [mat-dialog-close]="true">Cancel</button>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext [disabled]="Credentials.invalid || Credentials.pending">Next</button>
+                      </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="RoleAndMenu">
+                    <form [formGroup]="RoleAndMenu">
+                      <ng-template matStepLabel>Assign Role & Menu</ng-template>
+                      <mat-form-field appearance="fill" class="width-50">
+                        <mat-select formControlName="UserRoleId" [(ngModel)]="local_data.UserRoleId"  required>
+                            <mat-option *ngFor="let roles of roleOption" [value]="roles.id">
+                                {{ roles.name }}
+                              </mat-option>
+                        </mat-select>
+                        <mat-error>
+                            Please select a role
+                        </mat-error>
+                        </mat-form-field>
+                      <mat-form-field appearance="fill">
+                        <mat-label>Menu</mat-label>
+                        <mat-select formControlName="UserMenuId" [(ngModel)]="local_data.UserMenuId" multiple required>
+                          <mat-option  *ngFor="let menus of menusList" [value]="menus.id">{{menus.displayName}}</mat-option>
+                        </mat-select>
+                        <mat-error>Please select menu</mat-error>
+                      </mat-form-field>
+                      <div>
+                        <button mat-button [mat-dialog-close]="true">Cancel</button>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                      </div>
+                    </form>
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>Done</ng-template>
+                    <p>You are now done.</p>
+                    <div>
+                        <button mat-button [mat-dialog-close]="true">Cancel</button>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button (click)="doAction()">{{action}} User</button>
+                    </div>
+                  </mat-step>
+            </mat-horizontal-stepper>
+        </mat-dialog-content>

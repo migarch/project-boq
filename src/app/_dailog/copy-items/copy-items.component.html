@@ -1,0 +1,18 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+    <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+<h2 mat-dialog-title>{{action}} Items</h2>
+<mat-dialog-content>
+    <mat-form-field class="width-100" appearance="fill">
+        <mat-label>Buildng</mat-label>
+        <select matNativeControl (change)="selectItems($event)">
+            <option>Select</option>
+            <option *ngFor="let option of building" [value]="option.id">{{ option.BuildingName }}</option>
+        </select>
+    </mat-form-field>
+    <hr>
+    <mat-selection-list #list [(ngModel)]="selectedOptions">
+        <mat-list-option *ngFor="let item of lineitems" [value]="item.ItemName">{{item.ItemName}}</mat-list-option>
+    </mat-selection-list>
+    <button mat-button mat-raised-button color="primary" (click)="doAction()">{{ action }}</button>
+</mat-dialog-content>
