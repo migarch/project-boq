@@ -6,6 +6,7 @@
         <mat-card-subtitle>
             Proejct Details
         </mat-card-subtitle>
+        
     </mat-card-header>
     <mat-card-content>
         <div style="width: 100%; display: inline-flex; position: relative;">
@@ -75,6 +76,15 @@
                                     <button class="ml-2" [disabled]="!disabledAddItem" (click)="slectAndItems('Select',{})" mat-raised-button mat-button color="primary">
                                         <mat-icon>content_copy</mat-icon>
                                     </button>
+                                </div>
+                                <div class="conf-seq">
+                                        <select class="select-confi" [disabled]="disabledSequence" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="itemSequence(sel.value)">
+                                            <option value="" selected>Defualt</option>
+                                            <option value="CapitalAlpha">A,B,C</option>
+                                            <option value="SmallAlpha">a,b,c</option>
+                                            <option value="EngNumber">1,2,3</option>
+                                            <option value="RomanNumber">I,II,III</option>
+                                        </select>
                                 </div>
                                 
                             </div>

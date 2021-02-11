@@ -16,7 +16,7 @@ div.container {
   display: flex;
 }
 
-div.addButton{
+div.conf-seq{
   position:absolute;
   right: 0;
   margin: 5px 20px;
@@ -29,6 +29,15 @@ div.copyButton{
 
 .cancelButton{
   margin-left: 5px;
+}
+.select-confi{
+  background: #1f8b8b;
+  color: #fff;
+  padding: 9px 16px;
+  border-radius: 4px;
+  vertical-align: middle;
+  position: relative;
+  top: auto;
 }
 
 .mat-button-disabled{
@@ -48,7 +57,7 @@ button.ml-2{
   margin-left: 5px;
 }
 
-.container div[ng-reflect-flex*=calc] {
+.confi-button{
   
 }
 
@@ -128,4 +137,8 @@ button.ml-2{
   .b-add-button{
     /* margin-left: 200px; */
     /* float: right; */
+  }
+
+  .mat-input-element:disabled, .mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after{
+    cursor: not-allowed;
   }

@@ -32,10 +32,12 @@ export class ProjectDetailsComponent implements OnInit {
   lineItemForm: FormGroup;
   enabled = true;
   show = false;
+  value:string;
   disabledAddItem = false;
   disabledCopyItem = false;
   disabledAddLineItems = false;
   disabledCopyLineItem = false;
+  disabledSequence = true;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -124,6 +126,12 @@ export class ProjectDetailsComponent implements OnInit {
     .subscribe(resp =>{
       this.buildingItem = resp;
       this.getBuildingId = params;
+      if(resp == ''){
+        this.disabledSequence = false;
+      }else
+      {
+        this.disabledSequence = true;
+      }
     })
   }
 
@@ -139,7 +147,6 @@ export class ProjectDetailsComponent implements OnInit {
       this.lineitems = resp;
       this.disabledAddLineItems = true;
       this.disabledCopyLineItem = true;
-      console.log(resp);
     });
   }
 
@@ -214,6 +221,10 @@ export class ProjectDetailsComponent implements OnInit {
 
   selectLineItems(){
     
+  }
+
+  itemSequence(value){
+    console.log(this.value = value);
   }
 
 }
