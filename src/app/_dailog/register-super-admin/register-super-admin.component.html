@@ -9,11 +9,11 @@
                     <form [formGroup]="UserDetails">
                       <ng-template matStepLabel>User Details</ng-template>
                       <mat-form-field class="width-50">
-                        <input type="text" matInput placeholder="Name" [(ngModel)]="local_data.Name" formControlName="Name" required>
+                        <input type="text" matInput placeholder="Name" formControlName="Name" required>
                         <mat-error>Please provide a name </mat-error>
                       </mat-form-field>
                       <mat-form-field class="width-50 ml-2">
-                        <input type="tel" matInput placeholder="Phone" [(ngModel)]="local_data.PhoneNumber" formControlName="PhoneNumber" required>
+                        <input type="tel" matInput placeholder="Phone" formControlName="PhoneNumber" required>
                         <mat-error>Please provide a valid number </mat-error>
                       </mat-form-field>
                       <div>
@@ -27,12 +27,12 @@
                     <form [formGroup]="Credentials">
                       <ng-template matStepLabel>Credentials</ng-template>
                       <mat-form-field class="width-50">
-                        <input type="email" matInput placeholder="Email" [(ngModel)]="local_data.Email" class="width-50" formControlName="Email">
+                        <input type="email" matInput placeholder="Email" class="width-50" formControlName="Email">
                         <mat-hint align="end" *ngIf="Credentials.get('Email').pending">searching</mat-hint>
                         <mat-error *ngIf="Credentials.get('Email').errors?.emailExist">Email Exist</mat-error>
                       </mat-form-field>
                       <mat-form-field class="width-50 ml-2">
-                        <input type="password" [type]="hide ? 'password' : 'text'" matInput placeholder="Password" [(ngModel)]="local_data.Password" formControlName="Password" required>
+                        <input type="password" [type]="hide ? 'password' : 'text'" matInput placeholder="Password" formControlName="Password" required>
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
@@ -49,7 +49,7 @@
                     <form [formGroup]="RoleAndMenu">
                       <ng-template matStepLabel>Assign Role & Menu</ng-template>
                       <mat-form-field appearance="fill" class="width-50">
-                        <mat-select formControlName="UserRoleId" [(ngModel)]="local_data.UserRoleId"  required>
+                        <mat-select formControlName="UserRoleId"  required>
                             <mat-option *ngFor="let roles of roleOption" [value]="roles.id">
                                 {{ roles.name }}
                               </mat-option>
@@ -60,7 +60,7 @@
                         </mat-form-field>
                       <mat-form-field appearance="fill">
                         <mat-label>Menu</mat-label>
-                        <mat-select formControlName="UserMenuId" [(ngModel)]="local_data.UserMenuId" multiple required>
+                        <mat-select formControlName="UserMenuId" multiple required>
                           <mat-option  *ngFor="let menus of menusList" [value]="menus.id">{{menus.displayName}}</mat-option>
                         </mat-select>
                         <mat-error>Please select menu</mat-error>

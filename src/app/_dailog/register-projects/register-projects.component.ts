@@ -41,35 +41,38 @@ export class RegisterProjectsComponent implements OnInit {
      }
 
     ngOnInit(): void {
+      this.local_data = {...this.data};
+      this.action = this.local_data.action;
+
       this.projectName = this.formBuilder.group({
-        ProjectName:['', Validators.required]
+        ProjectName:[this.local_data.ProjectName, Validators.required]
       });
   
       this.projectDetails = this.formBuilder.group({
-        ProjectShortName:[''],
-        StartDate:['', Validators.required],
-        EndDate:['', Validators.required],
-        ProjectAddress:['', Validators.required],
-        PoAmount:['', Validators.required]
+        ProjectShortName:[this.local_data.ProjectShortName],
+        StartDate:[this.local_data.StartDate, Validators.required],
+        EndDate:[this.local_data.EndDate, Validators.required],
+        ProjectAddress:[this.local_data.ProjectAddress, Validators.required],
+        PoAmount:[this.local_data.PoAmount, Validators.required]
       });
   
       this.cleintInfo = this.formBuilder.group({
-        ClientName:['', Validators.required],
-        ClientAddress:['']
+        ClientName:[this.local_data.ClientName, Validators.required],
+        ClientAddress:[this.local_data.ClientAddress]
       });
   
       this.consultantInfo = this.formBuilder.group({
-        StructuralConsultantName:['', Validators.required],
-        StructuralConsultantAddress:['']
+        StructuralConsultantName:[this.local_data.StructuralConsultantName, Validators.required],
+        StructuralConsultantAddress:[this.local_data.StructuralConsultantAddress]
       });
   
       this.architectInfo = this.formBuilder.group({
-        ArchitectName:['', Validators.required],
-        ArchitectAddress:[''],
+        ArchitectName:[this.local_data.ArchitectName, Validators.required],
+        ArchitectAddress:[this.local_data.ArchitectAddress],
       });
       
       this.projectType = this.formBuilder.group({
-        TypeOfProject:['', Validators.required]
+        TypeOfProject:[this.local_data.TypeOfProject, Validators.required]
       });
     }
 

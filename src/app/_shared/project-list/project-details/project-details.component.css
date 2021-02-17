@@ -134,11 +134,57 @@ button.ml-2{
     border-radius: 4px;
     margin: 4px;
   }
-  .b-add-button{
-    /* margin-left: 200px; */
-    /* float: right; */
-  }
+ 
 
   .mat-input-element:disabled, .mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after{
     cursor: not-allowed;
   }
+
+  textfield.lineItems{
+    color:#1f8b8b;
+
+  }
+
+  .lineItemList{
+    background: #1f8b8b;
+    color: #fff;
+    padding: 8px 4px;
+    margin: 4px 0px;
+  }
+  .lineItemList h4{
+    margin: 0px;
+  }
+  table{
+    width: 100%;
+  }
+  table tr td h4{
+    margin: 0px;
+  }
+  thead{
+    background: #1f8b8b;
+  }
+  thead tr td{
+    text-align: center;
+    padding: 4px;
+  }
+  tbody tr td{
+    text-align: center;
+  }
+  .subline-tbl{
+    margin: 0px 0px 0px 38px;
+  }
+  
+  .subline-tbl table thead tr td{
+    background: darkgray;
+    padding: 1px;
+    text-align: center;
+  }
+  /* mat-table css */
+
+  tr.mat-header-row{
+    /* height: 30px; */
+  }
+  th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type{
+    padding-left: 12px;
+  }
+  

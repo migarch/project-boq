@@ -50,6 +50,7 @@ export class RegisterSuperAdminComponent implements OnInit {
 
     this.local_data = {...this.data};
     this.action = this.local_data.action;
+    
     if(!this.local_data){
       this.UserDetails = this.formBuilder.group({
         Name:['', Validators.required],
@@ -67,17 +68,17 @@ export class RegisterSuperAdminComponent implements OnInit {
       });
     }else{
       this.UserDetails = this.formBuilder.group({
-        Name:['', Validators.required],
-        PhoneNumber:['',[Validators.required, Validators.minLength(10), Validators.maxLength(10)]]
+        Name:[this.local_data.Name, Validators.required],
+        PhoneNumber:[this.local_data.PhoneNumber,[Validators.required, Validators.minLength(10), Validators.maxLength(10)]]
       });
 
       this.Credentials = this.formBuilder.group({
-        Email:[null, Validators.compose([Validators.email, Validators.required])],
-        Password:['', Validators.required],
+        Email:[this.local_data.Email, Validators.compose([Validators.email, Validators.required])],
+        Password:[this.local_data.Password, Validators.required],
       });
 
       this.RoleAndMenu = this.formBuilder.group({
-        UserRoleId:['',Validators.required],
+        UserRoleId:[this.local_data.UserRoleId,Validators.required],
         UserMenuId:[this.menusList,Validators.required]
       });
     }

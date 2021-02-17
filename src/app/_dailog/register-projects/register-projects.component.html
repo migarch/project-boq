@@ -10,7 +10,7 @@
             <form [formGroup]="projectName">
               <ng-template matStepLabel>Project Name</ng-template>
               <mat-form-field>
-                <input matInput placeholder="Project Name" formControlName="ProjectName" [(ngModel)]="local_data.ProjectName" required>
+                <input matInput placeholder="Project Name" formControlName="ProjectName" required>
                 <mat-error>Please provide a project name </mat-error>
               </mat-form-field>
               <div>
@@ -23,19 +23,19 @@
             <form [formGroup]="projectDetails">
               <ng-template matStepLabel>Project Details</ng-template>
               <mat-form-field>
-                <input matInput class="width-50" placeholder="Project Short Name" formControlName="ProjectShortName" [(ngModel)]="local_data.ProjectShortName">
+                <input matInput class="width-50" placeholder="Project Short Name" formControlName="ProjectShortName" >
               </mat-form-field>
               <mat-form-field>
-                <input type="date" class="width-50 ml-2" matInput placeholder="Start Date" formControlName="StartDate" [(ngModel)]="local_data.StartDate" required>
+                <input type="date" class="width-50 ml-2" matInput placeholder="Start Date" formControlName="StartDate" required>
               </mat-form-field>
               <mat-form-field>
-                <input type="date" class="width-50" matInput placeholder="End Date (Optional)" formControlName="EndDate" [(ngModel)]="local_data.EndDate">
+                <input type="date" class="width-50" matInput placeholder="End Date (Optional)" formControlName="EndDate" >
               </mat-form-field>
               <mat-form-field>
-                <input matInput class="width-50 ml-2" placeholder="Project Address" formControlName="ProjectAddress" [(ngModel)]="local_data.ProjectAddress" required>
+                <input matInput class="width-50 ml-2" placeholder="Project Address" formControlName="ProjectAddress" required>
               </mat-form-field>
               <mat-form-field>
-                <input matInput class="width-50" placeholder="Project Amount" formControlName="PoAmount" [(ngModel)]="local_data.PoAmount" required>
+                <input matInput class="width-50" placeholder="Project Amount" formControlName="PoAmount" required>
                 <mat-error>
                     Please provide a project amount
                 </mat-error>
@@ -51,10 +51,10 @@
             <form [formGroup]="cleintInfo">
               <ng-template matStepLabel>Client Info</ng-template>
               <mat-form-field>
-                <input matInput placeholder="Client Name" formControlName="ClientName" [(ngModel)]="local_data.ClientName">
+                <input matInput placeholder="Client Name" formControlName="ClientName">
               </mat-form-field>
               <mat-form-field>
-                <input matInput  placeholder="Client Address (Optional)" formControlName="ClientAddress"  [(ngModel)]="local_data.ClientAddress">
+                <input matInput  placeholder="Client Address (Optional)" formControlName="ClientAddress" >
               </mat-form-field>
               <div>
                 <button mat-button matStepperPrevious>Back</button>
@@ -67,10 +67,10 @@
             <form [formGroup]="consultantInfo">
               <ng-template matStepLabel>Consultant Info</ng-template>
               <mat-form-field>
-                <input matInput placeholder="Consultant Name" formControlName="StructuralConsultantName" [(ngModel)]="local_data.StructuralConsultantName">
+                <input matInput placeholder="Consultant Name" formControlName="StructuralConsultantName">
               </mat-form-field>
               <mat-form-field>
-                <input matInput  placeholder="Consultant Address (Optional)" formControlName="StructuralConsultantAddress"  [(ngModel)]="local_data.StructuralConsultantAddress">
+                <input matInput  placeholder="Consultant Address (Optional)" formControlName="StructuralConsultantAddress" >
               </mat-form-field>
               <div>
                 <button mat-button matStepperPrevious>Back</button>
@@ -83,10 +83,10 @@
             <form [formGroup]="architectInfo">
               <ng-template matStepLabel>Consultant Info</ng-template>
               <mat-form-field>
-                <input matInput placeholder="Architect Name" formControlName="ArchitectName" [(ngModel)]="local_data.ArchitectName">
+                <input matInput placeholder="Architect Name" formControlName="ArchitectName" >
               </mat-form-field>
               <mat-form-field>
-                <input matInput  placeholder="Architect Address (Optional)" formControlName="ArchitectAddress"  [(ngModel)]="local_data.ArchitectAddress">
+                <input matInput  placeholder="Architect Address (Optional)" formControlName="ArchitectAddress">
               </mat-form-field>
               <div>
                 <button mat-button matStepperPrevious>Back</button>
@@ -99,7 +99,7 @@
             <form [formGroup]="projectType">
               <ng-template matStepLabel>Project Type</ng-template>
               <mat-form-field>
-                <input matInput placeholder="Type Of Project" formControlName="TypeOfProject" [(ngModel)]="local_data.TypeOfProject">
+                <input matInput placeholder="Type Of Project" formControlName="TypeOfProject">
               </mat-form-field>
               <div>
                 <button mat-button matStepperPrevious>Back</button>

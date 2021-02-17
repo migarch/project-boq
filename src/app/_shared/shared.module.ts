@@ -9,7 +9,7 @@ import { SharedRoutingModule } from './shared-routing.module';
 @NgModule({
 declarations:[
     ProjectDetailsComponent,
-    ProjectListComponent
+    ProjectListComponent,
 ],
 imports:[
     FormsModule,

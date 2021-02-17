@@ -1,30 +1,74 @@
-import { AfterContentChecked, Component, OnChanges, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { AfterContentChecked, ChangeDetectorRef, Component, OnChanges, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
+import { MatSort } from '@angular/material/sort';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { CopyItemsComponent } from 'src/app/_dailog/copy-items/copy-items.component';
 import { Building } from 'src/app/_models/building';
 import { Items } from 'src/app/_models/items';
-import { LineItems } from 'src/app/_models/line-item';
-import { SubItems } from 'src/app/_models/sub-line';
 import { ProjectService } from 'src/app/_services/project.service';
 import Swal from 'sweetalert2';
 import { SlideInOutAnimation } from '../../_material/animations';
+
+export interface lineItem{
+  id:string;
+  ShortCode:string;
+  LineItemDescription:string;
+  Qty:string;
+  Unit:string;
+  Rate:string;
+  Amount:string;
+  Remarks:string;
+  IsSubLineItem?:boolean;
+  lineItem?: lineItem[];
+  sublineitems?:subLineItemss[] | MatTableDataSource<subLineItemss>;
+}
+
+export interface subLineItemss{
+  id:string;
+  ShortCode:string;
+  LineItemDescription:string;
+  Qty:string;
+  Unit:string;
+  Rate:string;
+  Amount:string;
+  Remarks:string;
+  IsSubLineItem?:boolean;
+}
 
 @Component({
   selector: 'app-project-details',
   templateUrl: './project-details.component.html',
   styleUrls: ['./project-details.component.css'],
-  animations:[SlideInOutAnimation]
+  animations:[SlideInOutAnimation,
+      trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.1, 1)')),
+    ]),]
 })
+
+
 export class ProjectDetailsComponent implements OnInit {
+  @ViewChild('outerSort', { static: true }) sort: MatSort;
+  @ViewChildren('innerSort') innerSort: QueryList<MatSort>;
+  @ViewChildren('innerTables') innerTables: QueryList<MatTable<subLineItemss>>;
   animationState = 'out';
   animationState2 = 'out';
   buildingDetails: Building[] = [];
   buildingItem: Items[] = [];
-  lineitems: any[] = [];
+
+  Line: lineItem[] = [];
+  dataSource:MatTableDataSource<lineItem>;
+  usersData: lineItem[] = [];
+  columnsToDisplay = ['ShortCode','LineItemDescription','IsSubLineItem','Qty','Unit','Rate','Amount','Remarks'];
+  innerDisplayedColumns = ['ShortCode','LineItemDescription','Qty','Unit','Rate','Amount','Remarks'];
+  expandedElement: lineItem | null;
+  
   projectDetails:any[] = [];
   ProjectName:string;
   ItemShortCodeType:string;
@@ -32,7 +76,8 @@ export class ProjectDetailsComponent implements OnInit {
   getBuildingId = {};
   addBulding: FormGroup;
   addItems: FormGroup;
-  lineItemForm: FormGroup;
+  addLineItems: FormGroup;
+  rows: FormArray;
   enabled = true;
   show = false;
   value:string;
@@ -41,11 +86,14 @@ export class ProjectDetailsComponent implements OnInit {
   disabledAddLineItems = false;
   disabledCopyLineItem = false;
   disabledSequence = true;
+
+  
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private projectService: ProjectService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private cd: ChangeDetectorRef
     ) { }
 
   getBuilding(params){
@@ -153,13 +201,23 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.getLineItems(params)
     .pipe(first())
     .subscribe(resp =>{
-      this.lineitems = resp;
+      this.Line = resp;
+      this.Line.forEach(itemss => {
+        if (itemss.sublineitems && Array.isArray(itemss.sublineitems) && itemss.sublineitems.length) {
+          this.usersData = [...this.usersData, {...itemss, sublineitems: new MatTableDataSource(itemss.sublineitems)}];
+        } else {
+          this.usersData = [...this.usersData, itemss];
+        }
+      });
+      this.dataSource = new MatTableDataSource(this.usersData);
+
       this.disabledAddLineItems = true;
       this.disabledCopyLineItem = true;
     });
   }
 
   get f() { return this.addItems.controls; }
+  
 
   reset(){
     this.addBulding.reset();
@@ -187,10 +245,6 @@ export class ProjectDetailsComponent implements OnInit {
 
     this.addItems = this.fb.group({
       ItemsName:['', Validators.required]
-    })
-
-    this.lineItemForm = this.fb.group({
-      ShortCode:[null],
     });
 
   }
@@ -234,6 +288,13 @@ export class ProjectDetailsComponent implements OnInit {
 
   itemSequence(value){
     console.log(this.value = value);
+  }
+
+  toggleRow(element: lineItem) {
+    element.sublineitems && (element.sublineitems as MatTableDataSource<lineItem>).data.length ? 
+    (this.expandedElement = this.expandedElement === element ? null : element) : null;
+    this.cd.detectChanges();
+    this.innerTables.forEach((table, index) => (table.dataSource as MatTableDataSource<lineItem>).sort = this.innerSort.toArray()[index]);
   }
 
 }

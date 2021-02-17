@@ -1,3 +1,5 @@
+import { MatTableDataSource } from "@angular/material/table";
+
 export interface LineItems{
     id:string;
     LineItemDescription:string;
@@ -6,7 +8,7 @@ export interface LineItems{
     Rate:string;
     Amount:string;
     Remarks:string;
-    IsSubLineItem:boolean;
+    IsSubLineItem:string;
     ShortCode:string;
-    lineitem?:LineItems[];
+    lineitems?:LineItems[] | MatTableDataSource<any>;
 }
