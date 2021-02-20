@@ -1,3 +1,4 @@
+
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
@@ -43,6 +44,30 @@ export class ProjectService{
 
     copySelectedItem(copy_paste_items){
         return this.http.post<any>(`${environment.apiUrl}/api/copy_paste_items`, copy_paste_items)
+    }
+
+    onUpdateBuilding(building){
+        return this.http.put<any>(`${environment.apiUrl}/api/edit_building`,building)
+    }
+
+    onDeleteBuilding(params){
+        return this.http.delete<any>(`${environment.apiUrl}/api/delete_building`,{params})
+    }
+
+    onUpdateItem(items){
+        return this.http.put<any>(`${environment.apiUrl}/api/edit_item`,items)
+    }
+
+    onChangeSqStatus(data){
+        return this.http.post<any>(`${environment.apiUrl}/api/config_project_short_code`,data)
+    }
+
+    onCopyLineItem(row_obj){
+        return this.http.post<any>(`${environment.apiUrl}/api/copy_paste_lineitems`,row_obj);
+    }
+
+    onFilterLineItems(row_obj){
+        return this.http.post<any>(`${environment.apiUrl}/api/get_items`, row_obj)
     }
 
 

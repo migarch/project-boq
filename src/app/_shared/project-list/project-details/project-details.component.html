@@ -44,21 +44,27 @@
                 </div>
                 <mat-card-content>
                     <mat-selection-list class="bulding-select" #shoes [multiple]="false" (selectionChange)="getBuildingList($event)">
-                        <mat-list-option class="bulding-list" *ngFor="let building of buildingDetails" [value]="building.id">
-                        <span>({{building.BuildingShortCode}}) | {{building.BuildingName}}
-                                <mat-hint align="end">
-                                    <button mat-icon-button [matMenuTriggerFor]="menu">
-                                        <mat-icon class="mat-icon-clor">more_vert</mat-icon>
-                                    </button>
-                                    <mat-menu #menu="matMenu">
-                                        <button mat-menu-item>
-                                        <mat-icon>edit</mat-icon>
-                                        <mat-icon>delete</mat-icon>
-                                        </button>
-                                    </mat-menu>
+                        <mat-list-option class="bulding-list" *ngFor="let building of buildingDetails; let i = index" [value]="building.id">
+                        <span>
+                            <span *ngIf="!building.canEditCode">
+                            <span>{{building.BuildingShortCode}}</span> |
+                            <span>{{building.BuildingName}}</span>
+                            </span>
+                            <span *ngIf="building.canEditCode">
+                            <input [(ngModel)]="building.BuildingShortCode" type="text" class="form-control" style="width: 25%;" /> |
+                            <input [(ngModel)]="building.BuildingName" type="text" class="form-control" />
+                            </span>
+                        </span>
+                        <span class="option-button">
+                                <mat-hint>
+                                    <mat-icon *ngIf="!building.canEditCode" style="color: green;" (click)="building.canEditCode = true">edit</mat-icon>
+                                    <mat-icon *ngIf="building.canEditCode" (click)="updateBuilding(building)" style="color: green;">done</mat-icon>
+                                    <mat-icon *ngIf="!building.canEditCode" (click)="deleteBuilding(i)" style="color: red;">delete</mat-icon>
+                                    <mat-icon *ngIf="building.canEditCode" (click)="cancelEdit(building)" style="color: red;">clear</mat-icon>
                                 </mat-hint>
                         </span>
                         </mat-list-option>
+                        
                     </mat-selection-list>
                 </mat-card-content>
             </mat-card>
@@ -78,12 +84,9 @@
                                     </button>
                                 </div>
                                 <div class="conf-seq">
-                                        <select class="select-confi" [disabled]="disabledSequence" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="itemSequence(sel.value)">
-                                            <option value="" selected>Defualt</option>
-                                            <option value="CapitalAlpha">A,B,C</option>
-                                            <option value="SmallAlpha">a,b,c</option>
-                                            <option value="EngNumber">1,2,3</option>
-                                            <option value="RomanNumber">I,II,III</option>
+                                        <select class="select-confi" [disabled]="disabledSequence" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="itemSequence($event)">
+                                            <option  *ngFor="let option of sequenceItem" [value]="option.value"
+                                            [selected]="selectedItem === option.value">{{ option.viewValue }}</option>
                                         </select>
                                 </div>
                                 
@@ -104,18 +107,17 @@
                 <mat-card-content>
                     <mat-selection-list class="bulding-select" class="" #item [multiple]="false" (selectionChange)="getItemId($event)">
                         <mat-list-option class="bulding-list" *ngFor="let items of buildingItem" [value]="items.id">
-                            <span>({{items.ItemShortCode}}) {{items.ItemName}}
-                            <mat-hint>
-                                <button mat-icon-button [matMenuTriggerFor]="menu">
-                                    <mat-icon class="mat-icon-clor">more_vert</mat-icon>
-                                </button>
-                                <mat-menu #menu="matMenu">
-                                    <button mat-menu-item>
-                                    <mat-icon>edit</mat-icon>
-                                    <mat-icon>delete</mat-icon>
-                                    </button>
-                                </mat-menu>
-                            </mat-hint></span>
+                            <span>({{items.ItemShortCode}}) <span *ngIf="!items.canEditCode">{{items.ItemName}}</span>
+                                                            <span *ngIf="items.canEditCode"><input contenteditable="true" [(ngModel)]="items.ItemName" type="text" /></span>
+                            </span>
+                            <span class="option-button">
+                                <mat-hint>
+                                    <mat-icon *ngIf="!items.canEditCode" style="color: green;" (click)="items.canEditCode = true">edit</mat-icon>
+                                    <mat-icon *ngIf="items.canEditCode" (click)="updateItem(items)" style="color: green;">done</mat-icon>
+                                    <mat-icon *ngIf="!items.canEditCode" (click)="deleteItem(i)" style="color: red;">delete</mat-icon>
+                                    <mat-icon *ngIf="items.canEditCode" (click)="cancelItem(items)" style="color: red;">clear</mat-icon>
+                                </mat-hint>
+                        </span>
                         </mat-list-option>
                     </mat-selection-list>
                 </mat-card-content>
@@ -131,10 +133,17 @@
                                     <button [disabled]="" mat-raised-button mat-button color="primary">
                                         <mat-icon>add</mat-icon>
                                     </button>
-                                    <button [disabled]="!disabledCopyLineItem" class="ml-2" mat-raised-button mat-button color="primary">
+                                    <button [disabled]="!disabledCopyLineItem" (click)="slecetAndLineItems('Select',{})" class="ml-2" mat-raised-button mat-button color="primary">
                                         <mat-icon>content_copy</mat-icon>
                                     </button>
                                 </div>
+                                <div class="conf-seq">
+                                    <select class="select-confi" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="lineitemSequence($event)">
+                                        <option  *ngFor="let option of sequenceLineItem" [value]="option.value"
+                                        [selected]="selectedLineItem === option.value">{{ option.viewValue }}</option>
+                                        
+                                    </select>
+                            </div>
                             </div>
                         </div>
                     </mat-card-subtitle>
@@ -142,17 +151,27 @@
                 
                 <mat-card-content>
                     <!-- mat table -->
-
                     <table mat-table [dataSource]="dataSource" #outerSort="matSort"  multiTemplateDataRows class="mat-elevation-z8" matSort>
                         <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                            <ng-container *ngIf="column !== 'IsSubLineItem'; else IsSubLineItem">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
                             <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                            </ng-container>
+                            <ng-template #IsSubLineItem>
+                                <th mat-header-cell *matHeaderCellDef> Sub Items </th>
+                                <td mat-cell *matCellDef="let element">
+                                  <mat-icon
+                                  (click)="expandedElement = expandedElement === element ? null : element" >
+                                  {{expandedElement === element ? 'expand_less' : 'expand_more'}}</mat-icon>
+                                </td>
+                            </ng-template>
                         </ng-container>
-
+                        
                         <!-- Expanded Content -->
                         <ng-container matColumnDef="expandedDetail">
                             <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-                                <div class="example-element-detail" *ngIf="element.sublineitems?.data.length" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                                <div class="example-element-detail" *ngIf="element.sublineitems?.data.length" 
+                                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                                     <div class="inner-table mat-elevation-z8" *ngIf="expandedElement">
                                         
                                         <table #innerTables mat-table #innerSort="matSort" [dataSource]="element.sublineitems" matSort>

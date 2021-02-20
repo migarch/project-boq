@@ -187,4 +187,12 @@ button.ml-2{
   th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type{
     padding-left: 12px;
   }
+  .option-button{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .hidden{
+    display: none;
+  }
   

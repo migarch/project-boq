@@ -8,6 +8,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { CopyItemsComponent } from 'src/app/_dailog/copy-items/copy-items.component';
+import { CopyLineitemsComponent } from 'src/app/_dailog/copy-lineitems/copy-lineitems.component';
 import { Building } from 'src/app/_models/building';
 import { Items } from 'src/app/_models/items';
 import { ProjectService } from 'src/app/_services/project.service';
@@ -65,15 +66,15 @@ export class ProjectDetailsComponent implements OnInit {
   Line: lineItem[] = [];
   dataSource:MatTableDataSource<lineItem>;
   usersData: lineItem[] = [];
-  columnsToDisplay = ['ShortCode','LineItemDescription','IsSubLineItem','Qty','Unit','Rate','Amount','Remarks'];
-  innerDisplayedColumns = ['ShortCode','LineItemDescription','Qty','Unit','Rate','Amount','Remarks'];
+  columnsToDisplay = ['ShortCode','LineItemDescription','IsSubLineItem','Qty','Unit','Rate','Amount','Remarks','Action'];
+  innerDisplayedColumns = ['ShortCode','LineItemDescription','Qty','Unit','Rate','Amount','Remarks', 'Action'];
   expandedElement: lineItem | null;
   
   projectDetails:any[] = [];
   ProjectName:string;
-  ItemShortCodeType:string;
   projectId = {};
   getBuildingId = {};
+  getBItemId = {}
   addBulding: FormGroup;
   addItems: FormGroup;
   addLineItems: FormGroup;
@@ -87,7 +88,26 @@ export class ProjectDetailsComponent implements OnInit {
   disabledCopyLineItem = false;
   disabledSequence = true;
 
-  
+  sequenceItem: any[] = [
+    {value: 'A-Z', viewValue: 'A,B,C'},
+    {value: 'a-z', viewValue: 'a,b,c'},
+    {value: '1-N', viewValue: '1,2,3'}
+  ];
+
+  sequenceLineItem: any[] = [
+    {value: 'A-Z', viewValue: 'A,B,C'},
+    {value: 'a-z', viewValue: 'a,b,c'},
+    {value: '1-N', viewValue: '1,2,3'}
+  ];
+
+  ItemShortCodeType:string;
+  LineItemShortCodeType:string;
+  selectedItem;
+  selectedLineItem;
+
+
+  canEditCode = false;
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -106,6 +126,23 @@ export class ProjectDetailsComponent implements OnInit {
         .subscribe(resp =>{
           this.projectDetails = resp;
           this.ProjectName = this.projectDetails[0]['ProjectName'];
+          this.ItemShortCodeType = this.projectDetails[0]['ItemShortCodeType'];
+          this.LineItemShortCodeType = this.projectDetails[0]['LineItemShortCodeType'];
+          if(this.ItemShortCodeType == 'A-Z'){
+            this.selectedItem = this.sequenceItem[0].value;
+          }else if(this.ItemShortCodeType == 'a-z'){
+            this.selectedItem = this.sequenceItem[1].value;
+          }else if(this.ItemShortCodeType == '1-N'){
+            this.selectedItem = this.sequenceItem[2].value;
+          }
+          if(this.LineItemShortCodeType == 'A-Z'){
+            this.selectedLineItem = this.sequenceLineItem[0].value;
+          }else if(this.LineItemShortCodeType == 'a-z'){
+            this.selectedLineItem = this.sequenceLineItem[1].value;
+          }else if(this.LineItemShortCodeType == '1-N'){
+            this.selectedLineItem = this.sequenceLineItem[2].value;
+          }
+          
         })
     });
   }
@@ -195,6 +232,7 @@ export class ProjectDetailsComponent implements OnInit {
   getItemId(change: MatSelectionListChange){
     let params = {item_id:change.option.value};
     this.getLineItems(params);
+    this.getBItemId = params;
   }
 
   getLineItems(params){
@@ -246,6 +284,7 @@ export class ProjectDetailsComponent implements OnInit {
     this.addItems = this.fb.group({
       ItemsName:['', Validators.required]
     });
+    
 
   }
 
@@ -282,12 +321,72 @@ export class ProjectDetailsComponent implements OnInit {
     });
   }
 
-  selectLineItems(){
-    
+  slecetAndLineItems(action, obj){
+    obj.action = action;
+    obj.BuildingId = this.getBuildingId['building_id'];
+    obj.LineItemShortCodeType = this.projectDetails[0]['LineItemShortCodeType'];
+    obj.projectId = this.projectId;
+    obj.itemId = this.getBItemId['item_id'];
+    console.log(obj);
+    const dialogRef = this.dialog.open(CopyLineitemsComponent,{
+      // disableClose: true,
+      data:obj
+    });
+    dialogRef.afterClosed().subscribe(result =>{
+      if(result.event == 'Select'){
+        this.copySelectLineItems(result.data);
+      }
+    });
   }
 
-  itemSequence(value){
-    console.log(this.value = value);
+  copySelectLineItems(row_obj){
+    console.log(row_obj);
+    this.projectService.onCopyLineItem(row_obj)
+    .pipe(first())
+    .subscribe(resp => {
+      console.log(resp);
+    });
+
+  }
+
+  itemSequence($event: Event){
+    let type = 'Item';
+    let value = ($event.target as HTMLSelectElement).value;
+    let data = {project_id: this.projectId, ShortCodeSlug: type, ItemShortCodeType:value};
+    this.projectService.onChangeSqStatus(data)
+    .pipe(first())
+    .subscribe({
+      next: () =>{
+        Swal.fire({
+          toast:true,
+          title: 'Update successfully',
+          position:'top',
+          timer: 1500,
+          icon:'success',
+          showConfirmButton:false,
+        });
+      }
+    });
+  }
+
+  lineitemSequence($event: Event){
+    let type = 'LineItem';
+    let value = ($event.target as HTMLSelectElement).value;
+    let data = {project_id: this.projectId, ShortCodeSlug: type, LineItemShortCodeType:value};
+    this.projectService.onChangeSqStatus(data)
+    .pipe(first())
+    .subscribe({
+      next: () =>{
+        Swal.fire({
+          toast:true,
+          title: 'Update successfully',
+          position:'top',
+          timer: 1500,
+          icon:'success',
+          showConfirmButton:false,
+        });
+      }
+    });
   }
 
   toggleRow(element: lineItem) {
@@ -296,5 +395,68 @@ export class ProjectDetailsComponent implements OnInit {
     this.cd.detectChanges();
     this.innerTables.forEach((table, index) => (table.dataSource as MatTableDataSource<lineItem>).sort = this.innerSort.toArray()[index]);
   }
+
+  editBuilding(building: Building){
+    this.animationState = this.animationState === 'out' ? 'in' : 'in';
+    this.addBulding = this.fb.group({
+      ProjectId:[this.projectId, Validators.required],
+      BuildingShortCode:[building.BuildingShortCode],
+      BuildingName:[building.BuildingName, Validators.required]
+    }); 
+  }
+
+
+  updateBuilding(building){
+    building.canEditCode = false;
+    this.projectService.onUpdateBuilding(building)
+    .pipe(first())
+    .subscribe({
+      next: () =>{
+        Swal.fire({
+          toast:true,
+          title: 'Update successfully',
+          position:'top',
+          timer: 1500,
+          icon:'success',
+          showConfirmButton:false,
+        })
+      }
+    });
+  }
+
+  cancelEdit(building){
+    building.canEditCode = false;
+  }
+
+  deleteBuilding(i){
+    
+  }
+
+  updateItem(items){
+    items.canEditCode = false;
+    this.projectService.onUpdateItem(items)
+    .pipe(first())
+    .subscribe({
+      next: () =>{
+        Swal.fire({
+          toast:true,
+          title: 'Update successfully',
+          position:'top',
+          timer: 1500,
+          icon:'success',
+          showConfirmButton:false,
+        })
+      }
+    });
+  }
+
+  cancelItem(items){
+    items.canEditCode = false;
+  }
+
+  deleteItem(items){
+
+  }
+
 
 }

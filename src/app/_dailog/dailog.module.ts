@@ -6,13 +6,15 @@ import { RegisterCompanyComponent } from "./register-company/register-company.co
 import { RegisterProjectsComponent } from "./register-projects/register-projects.component";
 import { RegisterSuperAdminComponent } from "./register-super-admin/register-super-admin.component";
 import { CopyItemsComponent } from './copy-items/copy-items.component';
+import { CopyLineitemsComponent } from './copy-lineitems/copy-lineitems.component';
 
 @NgModule({
     declarations:[
         RegisterCompanyComponent,
         RegisterProjectsComponent,
         RegisterSuperAdminComponent,
-        CopyItemsComponent
+        CopyItemsComponent,
+        CopyLineitemsComponent
     ],
     imports:[
         FormsModule,
