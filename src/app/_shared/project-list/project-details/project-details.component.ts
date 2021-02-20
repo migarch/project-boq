@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AfterContentChecked, ChangeDetectorRef, Component, OnChanges, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnChanges, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatSort } from '@angular/material/sort';
@@ -69,6 +69,7 @@ export class ProjectDetailsComponent implements OnInit {
   columnsToDisplay = ['ShortCode','LineItemDescription','IsSubLineItem','Qty','Unit','Rate','Amount','Remarks','Action'];
   innerDisplayedColumns = ['ShortCode','LineItemDescription','Qty','Unit','Rate','Amount','Remarks', 'Action'];
   expandedElement: lineItem | null;
+  isTableExpanded = false;
   
   projectDetails:any[] = [];
   ProjectName:string;
@@ -78,10 +79,7 @@ export class ProjectDetailsComponent implements OnInit {
   addBulding: FormGroup;
   addItems: FormGroup;
   addLineItems: FormGroup;
-  rows: FormArray;
-  enabled = true;
-  show = false;
-  value:string;
+
   disabledAddItem = false;
   disabledCopyItem = false;
   disabledAddLineItems = false;
@@ -240,23 +238,34 @@ export class ProjectDetailsComponent implements OnInit {
     .pipe(first())
     .subscribe(resp =>{
       this.Line = resp;
-      this.Line.forEach(itemss => {
-        if (itemss.sublineitems && Array.isArray(itemss.sublineitems) && itemss.sublineitems.length) {
-          this.usersData = [...this.usersData, {...itemss, sublineitems: new MatTableDataSource(itemss.sublineitems)}];
+      this.Line.forEach(lineItem => {
+        if (lineItem.sublineitems && Array.isArray(lineItem.sublineitems)) {
+          this.Line = [...this.usersData, {...lineItem, sublineitems: new MatTableDataSource(lineItem.sublineitems)}];
         } else {
-          this.usersData = [...this.usersData, itemss];
+          this.Line = [...this.usersData, lineItem];
         }
       });
-      this.dataSource = new MatTableDataSource(this.usersData);
+      this.dataSource = new MatTableDataSource<lineItem>(this.Line);
 
       this.disabledAddLineItems = true;
       this.disabledCopyLineItem = true;
     });
   }
 
-  get f() { return this.addItems.controls; }
+  toggleRows() {
+    this.isTableExpanded = !this.isTableExpanded;
+    this.dataSource.data.forEach((row: any) => {
+      row.isExpanded = this.isTableExpanded;
+    })
+  }
+
+  addLineItem(){
+    
+  }
   
 
+  get f() { return this.addItems.controls; }
+  
   reset(){
     this.addBulding.reset();
     this.animationState = this.animationState === 'out' ? 'in' : 'out';
