@@ -1,16 +1,19 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectorRef, Component, OnChanges, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { CopyItemsComponent } from 'src/app/_dailog/copy-items/copy-items.component';
 import { CopyLineitemsComponent } from 'src/app/_dailog/copy-lineitems/copy-lineitems.component';
 import { Building } from 'src/app/_models/building';
 import { Items } from 'src/app/_models/items';
+import { LineItems } from 'src/app/_models/line-item';
 import { ProjectService } from 'src/app/_services/project.service';
 import Swal from 'sweetalert2';
 import { SlideInOutAnimation } from '../../_material/animations';
@@ -18,6 +21,7 @@ import { SlideInOutAnimation } from '../../_material/animations';
 export interface lineItem{
   id:string;
   ShortCode:string;
+  ShortDescription:string
   LineItemDescription:string;
   Qty:string;
   Unit:string;
@@ -32,6 +36,7 @@ export interface lineItem{
 export interface subLineItemss{
   id:string;
   ShortCode:string;
+  ShortDescription:string
   LineItemDescription:string;
   Qty:string;
   Unit:string;
@@ -39,6 +44,12 @@ export interface subLineItemss{
   Amount:string;
   Remarks:string;
   IsSubLineItem?:boolean;
+}
+
+export interface seqStatus{
+  Items:boolean;
+  LineItems:boolean;
+  SubLineItem:boolean;
 }
 
 @Component({
@@ -56,13 +67,14 @@ export interface subLineItemss{
 
 export class ProjectDetailsComponent implements OnInit {
   @ViewChild('outerSort', { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChildren('innerSort') innerSort: QueryList<MatSort>;
   @ViewChildren('innerTables') innerTables: QueryList<MatTable<subLineItemss>>;
   animationState = 'out';
   animationState2 = 'out';
   buildingDetails: Building[] = [];
   buildingItem: Items[] = [];
-
+  sequenceStatus: seqStatus[] = []
   Line: lineItem[] = [];
   dataSource:MatTableDataSource<lineItem>;
   usersData: lineItem[] = [];
@@ -102,7 +114,6 @@ export class ProjectDetailsComponent implements OnInit {
   LineItemShortCodeType:string;
   selectedItem;
   selectedLineItem;
-
 
   canEditCode = false;
 
@@ -237,15 +248,18 @@ export class ProjectDetailsComponent implements OnInit {
     this.projectService.getLineItems(params)
     .pipe(first())
     .subscribe(resp =>{
-      this.Line = resp;
+      
+      this.usersData = resp;
       this.Line.forEach(lineItem => {
         if (lineItem.sublineitems && Array.isArray(lineItem.sublineitems)) {
-          this.Line = [...this.usersData, {...lineItem, sublineitems: new MatTableDataSource(lineItem.sublineitems)}];
+          this.usersData = [...this.usersData, {...lineItem, sublineitems: new MatTableDataSource(lineItem.sublineitems)}];
         } else {
-          this.Line = [...this.usersData, lineItem];
+          this.usersData = [...this.usersData, lineItem];
         }
       });
-      this.dataSource = new MatTableDataSource<lineItem>(this.Line);
+      
+      this.dataSource = new MatTableDataSource<lineItem>(this.usersData);
+      this.dataSource.paginator = this.paginator;
 
       this.disabledAddLineItems = true;
       this.disabledCopyLineItem = true;
@@ -278,9 +292,10 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     this.route.params.subscribe(params =>{
       this.getBuilding(params);
+      this.getStatus(params);
       this.projectId = params.project_id;
     });
 
@@ -293,8 +308,15 @@ export class ProjectDetailsComponent implements OnInit {
     this.addItems = this.fb.group({
       ItemsName:['', Validators.required]
     });
-    
 
+  }
+
+  getStatus(params){
+    this.projectService.onGetStatus(params)
+    .pipe(first())
+    .subscribe(resp =>{
+      this.sequenceStatus = resp.response;
+    })
   }
 
   toggleAdd(divName: string){
@@ -438,7 +460,7 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   deleteBuilding(i){
-    
+    this.buildingDetails.splice(i, 1);
   }
 
   updateItem(items){
@@ -463,8 +485,55 @@ export class ProjectDetailsComponent implements OnInit {
     items.canEditCode = false;
   }
 
-  deleteItem(items){
+  deleteItem(index){
+    let params = {item_id:index}
+    this.projectService.onDeleteItem(params)
+    .pipe(first())
+    .subscribe(resp =>{
+      this.buildingItem.splice(index, 1);
+    });
+  }
 
+  updateLineItem(element){
+    element.canEditCode = false;
+    let row_obj = {LineItemId:element.id, ShortDescription: element.ShortDescription, LineItemDescription:element.LineItemDescription,
+      Qty: element.Qty, Unit:element.Unit, Rate:element.Rate,Amount:element.Amount, Remarks:element.Remarks};
+    this.projectService.onUpdateLineItem(row_obj)
+    .pipe(first())
+    .subscribe({
+      next: () =>{
+        Swal.fire({
+          toast:true,
+          title: 'Update successfully',
+          position:'top',
+          timer: 1500,
+          icon:'success',
+          showConfirmButton:false,
+        })
+      }
+    });
+  }
+
+  deleteLineItem(id){
+    let params = {line_item_id:id}
+    const data = this.dataSource.data;
+    this.projectService.onDeleteLineItem(params)
+    .pipe(first())
+    .subscribe(resp =>{
+      // data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index, 1);
+      data.splice(id, 1);
+      this.dataSource.data = data;
+    });
+  }
+
+  deletesulineItem(index){
+    const data = this.dataSource.data;
+    let params = {subline_item_id:index}
+    this.projectService.onDeleteSubitem(params)
+    .pipe(first())
+    .subscribe(resp =>{
+      console.log(resp);
+    });
   }
 
 

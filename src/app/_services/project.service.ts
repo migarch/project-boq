@@ -8,6 +8,10 @@ import { environment } from "src/environments/environment";
 export class ProjectService{
     constructor(private http: HttpClient){ }
 
+    onGetStatus(params){
+        return this.http.get<any>(`${environment.apiUrl}/api/fetch_config_status`,{params})
+    }
+
     getBuildingList(params){
         return this.http.get<any>(`${environment.apiUrl}/api/fetch_building`,{params})
     }
@@ -68,6 +72,22 @@ export class ProjectService{
 
     onFilterLineItems(row_obj){
         return this.http.post<any>(`${environment.apiUrl}/api/get_items`, row_obj)
+    }
+
+    onUpdateLineItem(row_obj){
+        return this.http.put<any>(`${environment.apiUrl}/api/edit_lineitem`, row_obj)
+    }
+    
+    onDeleteSubitem(params){
+        return this.http.delete<any>(`${environment.apiUrl}/api/delete/subline_item`,{params})
+    }
+
+    onDeleteItem(params){
+        return this.http.delete<any>(`${environment.apiUrl}/api/delete/item`,{params})
+    }
+
+    onDeleteLineItem(params){
+        return this.http.delete<any>(`${environment.apiUrl}/api/delete/line_item`,{params})
     }
 
 

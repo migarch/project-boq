@@ -185,7 +185,8 @@ button.ml-2{
     /* height: 30px; */
   }
   th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type{
-    padding-left: 12px;
+    /* padding-left: 12px; */
+    text-align: center;
   }
   .option-button{
     position: absolute;
@@ -202,7 +203,7 @@ button.ml-2{
   }
   
   tr.example-element-row:not(.example-expanded-row):hover {
-    background: rgb(88, 138, 145);
+    /* background: rgb(88, 138, 145); */
   }
   
   tr.example-element-row:not(.example-expanded-row):active {
@@ -220,6 +221,10 @@ button.ml-2{
   .inner-table table{
     background: #585858;
     margin: 10px 0px;
+  }
+
+  .itemrow{
+    width: 90%;
   }
   
 
