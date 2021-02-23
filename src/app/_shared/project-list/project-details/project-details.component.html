@@ -130,7 +130,7 @@
                         <div class="containerX">
                             <div class="container">
                                 <div class="copyButton">
-                                    <button [disabled]="" mat-raised-button mat-button color="primary" (click)="addLineItem()">
+                                    <button [disabled]="!disabledAddLineItems" mat-raised-button mat-button color="primary" (click)="addLineItem()">
                                         <mat-icon>add</mat-icon>
                                     </button>
                                     <button [disabled]="!disabledCopyLineItem" (click)="slecetAndLineItems('Select',{})" class="ml-2" mat-raised-button mat-button color="primary">
@@ -152,20 +152,6 @@
                 <mat-card-content>
                     <!-- mat table -->
                     <table mat-table [dataSource]="dataSource" #outerSort="matSort"  multiTemplateDataRows class="mat-elevation-z8" matSort>
-                        <!-- <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-                            <ng-container *ngIf="column !== 'IsSubLineItem'; else IsSubLineItem">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
-                            <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
-                            </ng-container>
-                            <ng-template #IsSubLineItem>
-                                <th mat-header-cell *matHeaderCellDef> Sub Items </th>
-                                <td mat-cell *matCellDef="let element">
-                                  <mat-icon
-                                  (click)="expandedElement = expandedElement === element ? null : element" >
-                                  {{expandedElement === element ? 'expand_less' : 'expand_more'}}</mat-icon>
-                                </td>
-                            </ng-template>
-                        </ng-container> -->
                         <ng-container matColumnDef="ShortCode">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> S.Code </th>
                             <td mat-cell *matCellDef="let element"> {{element.ShortCode}} </td>
@@ -230,19 +216,13 @@
                                 </span>
                             </td>
                         </ng-container>
-                        
                         <!-- Expanded Content -->
                         <ng-container matColumnDef="expandedDetail">
                             <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
                                 <div class="example-element-detail" 
                                 [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                                     <div class="inner-table mat-elevation-z8" *ngIf="expandedElement">
-                                        
                                         <table #innerTables mat-table #innerSort="matSort" [dataSource]="element.sublineitems" matSort>
-                                            <!-- <ng-container matColumnDef="{{innerColumn}}" *ngFor="let innerColumn of innerDisplayedColumns">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{innerColumn}} </th>
-                                            <td mat-cell *matCellDef="let element"> {{element[innerColumn]}}</td>
-                                            </ng-container> -->
                                             <ng-container matColumnDef="ShortCode">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> S.Code </th>
                                                 <td mat-cell *matCellDef="let element"> {{element.ShortCode}} </td>
@@ -292,7 +272,7 @@
                                                 </td>
                                             </ng-container>
                                             <ng-container matColumnDef="Action">
-                                                <th mat-header-cell *matHeaderCellDef>  </th>
+                                                <th mat-header-cell *matHeaderCellDef> <mat-icon style="color: green;">add</mat-icon> </th>
                                                 <td mat-cell *matCellDef="let element;">   
                                                     <span style="display: flex;">
                                                         <mat-icon *ngIf="!element.canEditCode" style="color: green;" (click)="element.canEditCode = true">edit</mat-icon>
@@ -309,7 +289,6 @@
                                 </div>
                             </td>
                         </ng-container>
-
                         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
                         <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" [class.example-element-row]="element.sublineitems?.data"
                         [class.example-expanded-row]="expandedElement === element" (click)="toggleRows(element)">

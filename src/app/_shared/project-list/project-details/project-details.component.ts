@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectorRef, Component, OnChanges, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
@@ -7,13 +7,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { CopyItemsComponent } from 'src/app/_dailog/copy-items/copy-items.component';
 import { CopyLineitemsComponent } from 'src/app/_dailog/copy-lineitems/copy-lineitems.component';
 import { Building } from 'src/app/_models/building';
 import { Items } from 'src/app/_models/items';
-import { LineItems } from 'src/app/_models/line-item';
 import { ProjectService } from 'src/app/_services/project.service';
 import Swal from 'sweetalert2';
 import { SlideInOutAnimation } from '../../_material/animations';
@@ -65,7 +64,7 @@ export interface seqStatus{
 })
 
 
-export class ProjectDetailsComponent implements OnInit {
+export class ProjectDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('outerSort', { static: true }) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChildren('innerSort') innerSort: QueryList<MatSort>;
@@ -221,6 +220,12 @@ export class ProjectDetailsComponent implements OnInit {
     let params = {building_id:change.option.value};
     this.disabledAddItem = true;
     this.buildingList(params);
+    this.disabledAddLineItems = false;
+    this.disabledCopyLineItem = false;
+    // wrong api call
+    this.getLineItems(params)
+    
+    
   }
 
   buildingList(params){
@@ -242,6 +247,8 @@ export class ProjectDetailsComponent implements OnInit {
     let params = {item_id:change.option.value};
     this.getLineItems(params);
     this.getBItemId = params;
+    this.disabledAddLineItems = true;
+    this.disabledCopyLineItem = true;
   }
 
   getLineItems(params){
@@ -260,9 +267,6 @@ export class ProjectDetailsComponent implements OnInit {
       
       this.dataSource = new MatTableDataSource<lineItem>(this.usersData);
       this.dataSource.paginator = this.paginator;
-
-      this.disabledAddLineItems = true;
-      this.disabledCopyLineItem = true;
     });
   }
 
@@ -274,11 +278,19 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   addLineItem(){
-    
+    const obj: lineItem = {
+      id: '',
+      ShortCode:'',
+      ShortDescription:'',
+      LineItemDescription:'',
+      Qty:'',
+      Unit:'',
+      Rate:'',
+      Amount:'',
+      Remarks:'', 
+    }
+    this.dataSource.data.push(obj)
   }
-  
-
-  get f() { return this.addItems.controls; }
   
   reset(){
     this.addBulding.reset();
@@ -289,26 +301,6 @@ export class ProjectDetailsComponent implements OnInit {
   reset2(){
     this.addItems.reset();
     this.animationState2 = this.animationState2 === 'out' ? 'in' : 'out';
-  }
-
-  ngOnInit(): void {
-
-    this.route.params.subscribe(params =>{
-      this.getBuilding(params);
-      this.getStatus(params);
-      this.projectId = params.project_id;
-    });
-
-    this.addBulding = this.fb.group({
-      ProjectId:[this.projectId, Validators.required],
-      BuildingShortCode:[''],
-      BuildingName:['', Validators.required]
-    });
-
-    this.addItems = this.fb.group({
-      ItemsName:['', Validators.required]
-    });
-
   }
 
   getStatus(params){
@@ -358,9 +350,8 @@ export class ProjectDetailsComponent implements OnInit {
     obj.LineItemShortCodeType = this.projectDetails[0]['LineItemShortCodeType'];
     obj.projectId = this.projectId;
     obj.itemId = this.getBItemId['item_id'];
-    console.log(obj);
     const dialogRef = this.dialog.open(CopyLineitemsComponent,{
-      // disableClose: true,
+      disableClose: true,
       data:obj
     });
     dialogRef.afterClosed().subscribe(result =>{
@@ -371,11 +362,19 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   copySelectLineItems(row_obj){
-    console.log(row_obj);
+    let params = {item_id:row_obj.selectItems[0]['itemId']};
     this.projectService.onCopyLineItem(row_obj)
     .pipe(first())
     .subscribe(resp => {
-      console.log(resp);
+      this.getLineItems(params);
+      Swal.fire({
+        toast:true,
+        title: 'Copy successfully',
+        position:'top',
+        timer: 1500,
+        icon:'success',
+        showConfirmButton:false,
+      });
     });
 
   }
@@ -461,10 +460,29 @@ export class ProjectDetailsComponent implements OnInit {
 
   deleteBuilding(i, value){
     let params = {building_id:value['id']};
-    this.projectService.onDeletBuilding(params)
-    .pipe(first())
-    .subscribe(resp =>{
-      this.buildingDetails.splice(i, 1);
+    Swal.fire({
+      title: 'Are you sure delete?',
+      icon:'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confrim',
+      cancelButtonText: 'Cancel',
+      cancelButtonColor:'red',
+      allowOutsideClick: false,
+      allowEscapeKey: true,
+    }).then((result) => {
+      if(result.value) {
+        this.projectService.onDeletBuilding(params)
+        .pipe(first())
+        .subscribe(resp =>{
+          this.buildingList(params);
+          Swal.fire({
+            title: 'Delete successfully',
+            icon:'success',
+            timer:2000,
+          });
+          this.buildingDetails.splice(i, 1);
+        });
+      }
     });
   }
 
@@ -492,11 +510,29 @@ export class ProjectDetailsComponent implements OnInit {
 
   deleteItem(index, value){
     let params = {item_id:value['id']}
-    console.log(params);
-    this.projectService.onDeleteItem(params)
-    .pipe(first())
-    .subscribe(resp =>{
-      this.buildingItem.splice(index, 1);
+    Swal.fire({
+      title: 'Are you sure delete?',
+      icon:'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confrim',
+      cancelButtonText: 'Cancel',
+      cancelButtonColor:'red',
+      allowOutsideClick: false,
+      allowEscapeKey: true,
+    }).then((result) => {
+      if(result.value) {
+        this.projectService.onDeleteItem(params)
+        .pipe(first())
+        .subscribe(resp =>{
+          this.buildingItem.splice(index, 1);
+          this.getLineItems(params);
+          Swal.fire({
+            title: 'Delete successfully',
+            icon:'success',
+            timer:2000,
+          });
+        });
+      }
     });
   }
 
@@ -523,22 +559,82 @@ export class ProjectDetailsComponent implements OnInit {
   deleteLineItem(index, value){
     let params = {line_item_id:value['id']};
     const data = this.dataSource.data;
-    this.projectService.onDeleteLineItem(params)
-    .pipe(first())
-    .subscribe(resp =>{
-      data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index, 1);
-      this.dataSource.data = data;
+    Swal.fire({
+      title: 'Are you sure delete?',
+      icon:'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confrim',
+      cancelButtonText: 'Cancel',
+      cancelButtonColor:'red',
+      allowOutsideClick: false,
+      allowEscapeKey: true,
+    }).then((result) => {
+      if(result.value) {
+        this.projectService.onDeleteLineItem(params)
+        .pipe(first())
+        .subscribe(resp =>{
+          data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index, 1);
+          this.dataSource.data = data;
+            Swal.fire({
+              title: 'Delete successfully',
+              icon:'success',
+              timer:2000,
+            });
+        });
+      }
     });
   }
 
   deletesulineItem(index){
-    const data = this.dataSource.data;
     let params = {subline_item_id:index}
-    this.projectService.onDeleteSubitem(params)
-    .pipe(first())
-    .subscribe(resp =>{
-      console.log(resp);
+    Swal.fire({
+      title: 'Are you sure delete?',
+      icon:'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confrim',
+      cancelButtonText: 'Cancel',
+      cancelButtonColor:'red',
+      allowOutsideClick: false,
+      allowEscapeKey: true,
+    }).then((result) => {
+      if(result.value) {
+        this.projectService.onDeleteSubitem(params)
+        .pipe(first())
+        .subscribe(resp =>{
+          Swal.fire({
+            title: 'Delete successfully',
+            icon:'success',
+            timer:2000,
+          });
+        });
+      }
     });
+  }
+
+  get f() { return this.addItems.controls; }
+
+  ngOnInit(): void {
+
+    this.route.params.subscribe(params =>{
+      this.getBuilding(params);
+      this.getStatus(params);
+      this.projectId = params.project_id;
+    });
+
+    this.addBulding = this.fb.group({
+      ProjectId:[this.projectId, Validators.required],
+      BuildingShortCode:[''],
+      BuildingName:['', Validators.required]
+    });
+
+    this.addItems = this.fb.group({
+      ItemsName:['', Validators.required]
+    });
+
+  }
+
+  ngOnDestroy() {
+    
   }
 
 
