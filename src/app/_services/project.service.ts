@@ -90,5 +90,9 @@ export class ProjectService{
         return this.http.delete<any>(`${environment.apiUrl}/api/delete/line_item`,{params})
     }
 
+    onDeletBuilding(params){
+        return this.http.delete<any>(`${environment.apiUrl}/api/delete/building`,{params})
+    }
+
 
 }

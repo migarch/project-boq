@@ -47,7 +47,7 @@ export class CopyLineitemsComponent implements OnInit {
 
   doAction(){
     this.selection.selected.forEach(s => {
-    this.dialogRef.close({event:this.action, data:{selectItems:[this.data, s]}});
+    this.dialogRef.close({event:this.action, data:{selectItems:[this.data, this.selectedOptions]}});
     });
   }
 
@@ -79,9 +79,12 @@ export class CopyLineitemsComponent implements OnInit {
    }
 
    isAllSelected() {
-    const numSelected = this.selection.selected.length;
+    // const numSelected = this.selection.selected.length;
+    const numSelected = this.selection.selected;
+    this.selectedOptions = numSelected
     const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    return numSelected;
+    
   }
 
 

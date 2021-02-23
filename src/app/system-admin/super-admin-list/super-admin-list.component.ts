@@ -71,6 +71,7 @@ export class SuperAdminListComponent implements OnInit {
   }
 
   addUserData(row_obj){
+    console.log(row_obj);
     this.commanSerive.userSignup(row_obj)
     .pipe(first())
     .subscribe({

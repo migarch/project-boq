@@ -459,8 +459,13 @@ export class ProjectDetailsComponent implements OnInit {
     building.canEditCode = false;
   }
 
-  deleteBuilding(i){
-    this.buildingDetails.splice(i, 1);
+  deleteBuilding(i, value){
+    let params = {building_id:value['id']};
+    this.projectService.onDeletBuilding(params)
+    .pipe(first())
+    .subscribe(resp =>{
+      this.buildingDetails.splice(i, 1);
+    });
   }
 
   updateItem(items){
@@ -485,8 +490,9 @@ export class ProjectDetailsComponent implements OnInit {
     items.canEditCode = false;
   }
 
-  deleteItem(index){
-    let params = {item_id:index}
+  deleteItem(index, value){
+    let params = {item_id:value['id']}
+    console.log(params);
     this.projectService.onDeleteItem(params)
     .pipe(first())
     .subscribe(resp =>{
@@ -514,14 +520,13 @@ export class ProjectDetailsComponent implements OnInit {
     });
   }
 
-  deleteLineItem(id){
-    let params = {line_item_id:id}
+  deleteLineItem(index, value){
+    let params = {line_item_id:value['id']};
     const data = this.dataSource.data;
     this.projectService.onDeleteLineItem(params)
     .pipe(first())
     .subscribe(resp =>{
-      // data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index, 1);
-      data.splice(id, 1);
+      data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index, 1);
       this.dataSource.data = data;
     });
   }
