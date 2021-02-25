@@ -1,0 +1,75 @@
+<mat-card class="full-width">
+    <mat-card-content>
+        <button mat-button mat-raised-button color="primary" (click)="configMeasurment('Insert',{})"> Insert</button>
+          <mat-form-field>
+            <input matInput placeholder="Search">
+          </mat-form-field>
+      <div class="mat-elevation-z8">
+        <mat-table #table [dataSource]="dataSource" matSort>
+          
+          <ng-container matColumnDef="ShortCode">
+            <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.ShortCode}} </mat-cell>
+          </ng-container>
+        
+          <ng-container matColumnDef="Building">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Building </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Building}} </mat-cell>
+          </ng-container>
+        
+
+          <ng-container matColumnDef="Component">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Component </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Component}} </mat-cell>
+          </ng-container>
+        
+          
+          <ng-container matColumnDef="Tag">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Tag </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.Tag}} </mat-cell>
+          </ng-container>
+          
+          <ng-container matColumnDef="XGrid">
+              <mat-header-cell *matHeaderCellDef> XGrid </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.XGrid}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="YGrid">
+              <mat-header-cell *matHeaderCellDef> YGrid </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.YGrid}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Notes">
+                <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.Notes}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="Unit">
+                <mat-header-cell *matHeaderCellDef> Unit </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.Unit}} </mat-cell>
+              </ng-container>
+
+            <ng-container matColumnDef="PoAmount">
+              <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.Notes}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="add">
+              <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+              <mat-cell *matCellDef="let element">  </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="duplicate">
+              <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <button mat-button mat-raised-button color="primary" (click)="copyMeasurementLine(element.id)">copy</button> 
+              </mat-cell>
+            </ng-container>
+        
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+      </div>
+    </mat-card-content>
+</mat-card>

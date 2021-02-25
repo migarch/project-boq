@@ -16,6 +16,7 @@ export class AuthenticationService{
     ){
         this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user')));
         this.user = this.userSubject.asObservable();
+        this.getAssignMenu();
     }
 
     public get userValue():User{
@@ -42,6 +43,10 @@ export class AuthenticationService{
             return user;
         }));
 
+    }
+
+    getAssignMenu(){
+        return this.http.get<any>(`${environment.apiUrl}/api/fetch_menu`);
     }
 
     private refreshTokenTimeout;

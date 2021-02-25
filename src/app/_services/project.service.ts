@@ -94,5 +94,9 @@ export class ProjectService{
         return this.http.delete<any>(`${environment.apiUrl}/api/delete/building`,{params})
     }
 
+    onaddLineItems(row_obj){
+        return this.http.post<any>(`${environment.apiUrl}/api/add_lineitems`, row_obj)
+    }
+
 
 }

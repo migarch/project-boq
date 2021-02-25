@@ -16,9 +16,11 @@ import { AuthenticationService } from "../_services/authentication.service";
         if(user){
             if (route.data.roles && route.data.roles.indexOf(user.role) === -1) {
                     if(user.role === Role.System){
+                        this.authenticationService.getAssignMenu();
                         this.router.navigate(['/system-dashboard']);
                     }
                     else if(user.role === Role.Super){
+                        this.authenticationService.getAssignMenu();
                         this.router.navigate(['/super-dashboard']);
                     }
                     return false;

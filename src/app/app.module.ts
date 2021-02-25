@@ -14,11 +14,13 @@ import { DailogModule } from './_dailog/dailog.module';
 import { SystemAdminModule } from './system-admin/system-admin.module';
 import { SuperAdminModule } from './super-admin/system-admin.module';
 import { LoginComponent } from './auth/login/login.component';
+import { MeasurementSheetComponent } from './_shared/measurement-sheet/measurement-sheet.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    MeasurementSheetComponent
   ],
   imports: [
     BrowserModule,

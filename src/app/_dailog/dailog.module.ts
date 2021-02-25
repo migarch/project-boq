@@ -7,6 +7,7 @@ import { RegisterProjectsComponent } from "./register-projects/register-projects
 import { RegisterSuperAdminComponent } from "./register-super-admin/register-super-admin.component";
 import { CopyItemsComponent } from './copy-items/copy-items.component';
 import { CopyLineitemsComponent } from './copy-lineitems/copy-lineitems.component';
+import { InsertMeasurmentComponent } from './insert-measurment/insert-measurment.component';
 
 @NgModule({
     declarations:[
@@ -14,7 +15,8 @@ import { CopyLineitemsComponent } from './copy-lineitems/copy-lineitems.componen
         RegisterProjectsComponent,
         RegisterSuperAdminComponent,
         CopyItemsComponent,
-        CopyLineitemsComponent
+        CopyLineitemsComponent,
+        InsertMeasurmentComponent
     ],
     imports:[
         FormsModule,

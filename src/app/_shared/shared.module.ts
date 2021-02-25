@@ -19,7 +19,7 @@ declarations:[
     ViewModeDirective,
     EditModeDirective,
     FocusableDirective,
-    EditableOnEnterDirective
+    EditableOnEnterDirective,
 ],
 imports:[
     FormsModule,
@@ -28,7 +28,7 @@ imports:[
     MaterialModule,
     SharedRoutingModule
 ],
-exports:[ ],
+exports:[],
 })
 
 export class SharedModule{

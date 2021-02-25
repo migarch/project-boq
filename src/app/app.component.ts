@@ -1,10 +1,11 @@
-import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy, OnInit, Input } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { AuthenticationService } from './_services/authentication.service';
 import { User } from './_models';
 import { NavItem } from './_models/nav-item';
 import { first } from 'rxjs/operators';
 import { CommanService } from './_services/comman.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -12,11 +13,11 @@ import { CommanService } from './_services/comman.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
+  @Input() getMenuList: NavItem[] | Observable<NavItem[]>;
   user: User;
-  useremail;
   constructor(
     private authenticationService: AuthenticationService,
-    private commanServe: CommanService,
+    private auth: AuthenticationService,
     changeDetectorRef: ChangeDetectorRef, media: MediaMatcher
   ){ 
     this.authenticationService.user.subscribe(x => this.user = x);
@@ -25,11 +26,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.mobileQuery.addListener(this._mobileQueryListener)
   }
 
-  getMenuList: NavItem [] = [];
+  // getMenuList: NavItem [] = [];
 
   ngOnInit(): void{
-    this.useremail = this.user.email;
-    this.commanServe.getAssignMenu()
+    
+    this.auth.getAssignMenu()
     .pipe(first())
     .subscribe(resp =>{
         this.getMenuList = resp;

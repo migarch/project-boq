@@ -43,8 +43,4 @@ export class CommanService{
         return this.http.get<any>(`${environment.apiUrl}/api/fetch_all_menu`)
     }
 
-    getAssignMenu(){
-        return this.http.get<any>(`${environment.apiUrl}/api/fetch_menu`);
-    }
-
 }

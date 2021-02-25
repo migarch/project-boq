@@ -18,7 +18,7 @@ export class ProjectListComponent implements OnInit {
   loading= false;
   user:User;
   projects: Project[] = [];
-  displayedColumns2 = ['ProjectName','StartDate','EndDate','ClientName','ArchitectName','TypeOfProject','Go','Action'];
+  displayedColumns2 = ['ProjectName','StartDate','EndDate','ClientName','ArchitectName','TypeOfProject','projectDetails','measurementSheet','Action'];
   dataSource;
 
   constructor(

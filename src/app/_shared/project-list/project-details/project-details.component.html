@@ -26,18 +26,15 @@
                 </mat-card-subtitle>
                 </mat-card-header>
                 <div [@slideInOut]="animationState" class="addDiv" >
-                    <form [formGroup]="addBulding" (ngSubmit)="sendBuildingData()">
+                    <form [formGroup]="addBulding">
                         <mat-form-field class="width-50">
-                            <mat-label>Building Sortcode</mat-label>
-                            <input matInput type="text" formControlName="BuildingShortCode" placeholder="">
+                            <input matInput type="text" formControlName="BuildingShortCode" placeholder="Sortcode">
                         </mat-form-field>
                         <mat-form-field class="width-50 ml-2">
-                            <mat-label>Building Name</mat-label>
-                            <input matInput type="text" formControlName="BuildingName" placeholder="">
-                            <mat-error>Required</mat-error>
+                            <input matInput type="text" formControlName="BuildingName" placeholder="Building Name">
                         </mat-form-field>
                         <span class="b-add-button">
-                            <button [disabled]="!this.addBulding.valid" align="end" mat-button mat-raised-button color="primary">Insert</button>
+                            <button [disabled]="this.addBulding.invalid" mat-button mat-raised-button color="primary" (click)="sendBuildingData()">Insert</button>
                             <button class="cancelButton" mat-button mat-raised-button color="cancel" (click)="reset()">Cancel</button>
                         </span>
                     </form>
@@ -95,12 +92,11 @@
                     </mat-card-subtitle>
                 </mat-card-header>
                 <div [@slideInOut]="animationState2" class="addDiv2" >
-                    <form [formGroup]="addItems" (ngSubmit)="sendItemsData()">
+                    <form [formGroup]="addItems">
                         <mat-form-field class="width-100">
-                            <mat-label>Item Name</mat-label>
                             <input matInput type="text" formControlName="ItemsName" placeholder="Item Name">
                         </mat-form-field>
-                        <button [disabled]="this.addItems.invalid" align="end" mat-button mat-raised-button color="primary">Insert</button>
+                        <button [disabled]="this.addItems.invalid" align="end" mat-button mat-raised-button color="primary" (click)="sendItemsData()">Insert</button>
                         <button class="cancelButton" mat-button mat-raised-button (click)="reset2()">Cancel</button>
                     </form>
                 </div>
@@ -130,7 +126,7 @@
                         <div class="containerX">
                             <div class="container">
                                 <div class="copyButton">
-                                    <button [disabled]="!disabledAddLineItems" mat-raised-button mat-button color="primary" (click)="addLineItem()">
+                                    <button [disabled]="!disabledAddLineItems" mat-raised-button mat-button color="primary" (click)="toggleAdd('addDiv3')">
                                         <mat-icon>add</mat-icon>
                                     </button>
                                     <button [disabled]="!disabledCopyLineItem" (click)="slecetAndLineItems('Select',{})" class="ml-2" mat-raised-button mat-button color="primary">
@@ -148,7 +144,33 @@
                         </div>
                     </mat-card-subtitle>
                 </mat-card-header>
-                
+                <div [@slideInOut]="animationState3" class="addDiv3" >
+                    <form [formGroup]="InsertLineItems">
+                        <mat-form-field class="width-50">
+                            <input matInput type="text" formControlName="ShortDescription" placeholder="S.Description">
+                        </mat-form-field>
+                        <mat-form-field class="width-50 ml-2">
+                            <textarea matInput type="text" formControlName="LineItemDescription" placeholder="L.Description"></textarea>
+                        </mat-form-field>
+                        <mat-form-field class="width-25 ml-2">
+                            <input matInput type="text" formControlName="Qty" placeholder="Qty">
+                        </mat-form-field>
+                        <mat-form-field class="width-25 ml-2">
+                            <input matInput type="text" formControlName="Unit" placeholder="Unit">
+                        </mat-form-field>
+                        <mat-form-field class="width-25 ml-2">
+                            <input matInput type="text" formControlName="Rate" placeholder="Rate">
+                        </mat-form-field>
+                        <mat-form-field class="width-25 ml-2">
+                            <input matInput type="text" formControlName="Amount" placeholder="Amount">
+                        </mat-form-field>
+                        <mat-form-field class="width-25 ml-2">
+                            <textarea matInput type="text" formControlName="Remarks" placeholder="Remarks"></textarea>
+                        </mat-form-field>
+                        <button [disabled]="this.InsertLineItems.invalid" mat-button mat-raised-button color="primary" (click)="addLineItemsData()" style="margin-left: 14px;">Insert</button>
+                        <button class="cancelButton" mat-button mat-raised-button (click)="reset3()">Cancel</button>
+                    </form>
+                </div>
                 <mat-card-content>
                     <!-- mat table -->
                     <table mat-table [dataSource]="dataSource" #outerSort="matSort"  multiTemplateDataRows class="mat-elevation-z8" matSort>

@@ -71,6 +71,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   @ViewChildren('innerTables') innerTables: QueryList<MatTable<subLineItemss>>;
   animationState = 'out';
   animationState2 = 'out';
+  animationState3 = 'out';
   buildingDetails: Building[] = [];
   buildingItem: Items[] = [];
   sequenceStatus: seqStatus[] = []
@@ -86,10 +87,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   ProjectName:string;
   projectId = {};
   getBuildingId = {};
-  getBItemId = {}
+  getBItemId = {};
   addBulding: FormGroup;
   addItems: FormGroup;
-  addLineItems: FormGroup;
+  InsertLineItems: FormGroup;
 
   disabledAddItem = false;
   disabledCopyItem = false;
@@ -166,7 +167,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     .subscribe({
       next: () =>{
         this.animationState = this.animationState === 'out' ? 'in' : 'out';
-        this.addBulding.reset();
         Swal.fire({
           toast:true,
           title: 'add successfully',
@@ -174,7 +174,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           timer: 1500,
           icon:'success',
           showConfirmButton:false,
-        })
+        });
         this.getBuilding(params);
       }, error: error =>{
           Swal.fire({
@@ -214,6 +214,89 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         })
     });
 
+  }
+
+  addLineItemsData(){
+    if(this.InsertLineItems.invalid){
+      return;
+    }
+    let params = this.getBItemId;
+    let lineItem = this.InsertLineItems.value;
+    lineItem.IsSubLineItem = false;
+    let defultCodeType = this.projectDetails[0]['LineItemShortCodeType'];
+  
+        const row_obj = [{ShortCode:null, ItemId:params['item_id'], LineItemShortCodeType:defultCodeType, lineItem}];
+        this.projectService.onaddLineItems(row_obj)
+        .pipe(first())
+        .subscribe(resps =>{
+          this.getLineItems(params);
+          Swal.fire({
+            title: 'add successfully',
+            icon: 'success',
+            // html: 'You selected: ' + result.value
+          });
+        });
+  }
+
+  addLineItemsDatasdsds(){
+    if(this.InsertLineItems.invalid){
+      return;
+    }
+    let params = this.getBItemId;
+    let lineItem = this.InsertLineItems.value;
+    lineItem.IsSubLineItem = false;
+    let defultCodeType = this.projectDetails[0]['LineItemShortCodeType'];
+    this.projectService.getLineItems(params)
+    .pipe(first())
+    .subscribe(resp =>{
+      if(resp == ''){
+        const row_obj = [{ShortCode:null, ItemId:params['item_id'], LineItemShortCodeType:defultCodeType, lineItem}];
+        this.projectService.onaddLineItems(row_obj)
+        .pipe(first())
+        .subscribe(resps =>{
+          console.log(resps);
+          Swal.fire({
+            title: 'add successfully',
+            icon: 'success',
+            // html: 'You selected: ' + result.value
+          });
+        });
+      }else{
+        console.log(resp);
+        let options = {'2': 2, 'null': 'after'}
+        Swal.fire({
+          title:'Where to add?',
+          input:'radio',
+          inputOptions:options,
+          inputPlaceholder: 'Please select',
+          showCancelButton: true,
+          inputValidator: function (value) {
+            return new Promise(function (resolve, reject) {
+              if (value !== '') {
+                resolve(null);
+              } else {
+                resolve('You need to select');
+              }
+            });
+          }
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            const row_obj = [{ShortCode:result.value, ItemId:params['item_id'], LineItemShortCodeType:defultCodeType, lineItem}];
+            this.projectService.onaddLineItems(row_obj)
+            .pipe(first())
+            .subscribe(resps =>{
+              console.log(resps);
+              Swal.fire({
+                title: 'add successfully',
+                icon: 'success',
+                // html: 'You selected: ' + result.value
+              });
+            });
+            
+          }
+        });
+      }
+    });
   }
 
   getBuildingList(change: MatSelectionListChange){
@@ -276,21 +359,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       row.isExpanded = this.isTableExpanded;
     })
   }
-
-  addLineItem(){
-    const obj: lineItem = {
-      id: '',
-      ShortCode:'',
-      ShortDescription:'',
-      LineItemDescription:'',
-      Qty:'',
-      Unit:'',
-      Rate:'',
-      Amount:'',
-      Remarks:'', 
-    }
-    this.dataSource.data.push(obj)
-  }
   
   reset(){
     this.addBulding.reset();
@@ -301,6 +369,11 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   reset2(){
     this.addItems.reset();
     this.animationState2 = this.animationState2 === 'out' ? 'in' : 'out';
+  }
+
+  reset3(){
+    this.addItems.reset();
+    this.animationState3 = this.animationState3 === 'out' ? 'in' : 'out';
   }
 
   getStatus(params){
@@ -316,6 +389,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       this.animationState = this.animationState === 'out' ? 'in' : 'out';
     }else if(divName === 'addDiv2') {
       this.animationState2 = this.animationState2 === 'out' ? 'in' : 'out';
+    }else if(divName === 'addDiv3') {
+      this.animationState3 = this.animationState3 === 'out' ? 'in' : 'out';
     }
   }
 
@@ -629,6 +704,16 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     this.addItems = this.fb.group({
       ItemsName:['', Validators.required]
+    });
+
+    this.InsertLineItems = this.fb.group({
+      ShortDescription:['', Validators.required],
+      LineItemDescription:[''],
+      Qty:[''],
+      Unit:[''],
+      Rate:[''],
+      Amount:[''],
+      Remarks:['']
     });
 
   }
