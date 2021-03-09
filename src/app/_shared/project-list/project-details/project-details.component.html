@@ -190,8 +190,8 @@
                         </ng-container>
                         <ng-container matColumnDef="IsSubLineItem">
                             <th mat-header-cell *matHeaderCellDef> SubItem </th>
-                            <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"> 
-                                <mat-checkbox (click)="expandedElement = expandedElement === element ? null : element"></mat-checkbox> 
+                            <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;">
+                                <mat-checkbox (click)="expandedElement = expandedElement === element ? null : element"></mat-checkbox>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="Qty">
@@ -272,7 +272,7 @@
                                                 <mat-form-field class="width-25 ml-2">
                                                     <textarea matInput type="text" formControlName="Remarks" placeholder="Remarks"></textarea>
                                                 </mat-form-field>
-                                                <button [disabled]="this.InsertSubLineItems.invalid" mat-button mat-raised-button color="primary" (click)="addSubLineItemsData()" style="margin-left: 14px;">Insert</button>
+                                                <button [disabled]="this.InsertSubLineItems.invalid" mat-button mat-raised-button color="primary" (click)="addSubLineItemsData(element)" style="margin-left: 14px;">Insert</button>
                                                 <button class="cancelButton" mat-button mat-raised-button (click)="reset4()">Cancel</button>
                                             </form>
                                         </div>

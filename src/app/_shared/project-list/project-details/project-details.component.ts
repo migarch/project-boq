@@ -228,7 +228,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     lineItem.IsSubLineItem = false;
     let defultCodeType = this.projectDetails[0]['LineItemShortCodeType'];
   
-        const row_obj = [{ShortCode:null, ItemId:params['item_id'], LineItemShortCodeType:defultCodeType, lineItem}];
+        const row_obj = [{ShortCode:null, lineItemId:null, ItemId:params['item_id'], LineItemShortCodeType:defultCodeType, lineItem}];
         this.projectService.onaddLineItems(row_obj)
         .pipe(first())
         .subscribe(resps =>{
@@ -406,7 +406,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  addSubLineItemsData(){
+  addSubLineItemsData(row){
     if(this.InsertSubLineItems.invalid){
       return;
     }
@@ -414,8 +414,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     let lineItem = this.InsertSubLineItems.value;
     lineItem.IsSubLineItem = true;
     let defultCodeType = this.projectDetails[0]['SubLineItemShortCodeType'];
-  
-    const row_obj = [{ShortCode:null, ItemId:params['item_id'], LineItemShortCodeType:defultCodeType, lineItem}];
+    const row_obj = [{ShortCode:null, lineItemId:row['id'], ItemId:params['item_id'], LineItemShortCodeType:defultCodeType, lineItem}];
       console.log(row_obj);
         this.projectService.onaddSubLineItems(row_obj)
         .pipe(first())
