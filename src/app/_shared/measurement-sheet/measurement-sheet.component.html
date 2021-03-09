@@ -134,9 +134,13 @@
 
               <ng-container matColumnDef="Length">
                 <mat-header-cell *matHeaderCellDef> Length </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" (click)="editLength(element, index)">
                   <span *ngIf="!element.isEditable">{{element.Length }}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="Length"></span>
+                  <span  *ngIf="element.isEditable" >
+                  <mat-form-field>
+                    <input matInput type="text" formControlName="Length">
+                  </mat-form-field>
+                  </span>
                 </mat-cell>
               </ng-container>
 
@@ -157,7 +161,7 @@
               </ng-container>
 
               <ng-container matColumnDef="Quantity">
-                <mat-header-cell *matHeaderCellDef> Unit </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
                 <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                   <span *ngIf="!element.isEditable">{{element.Quantity}}</span>
                   <span  *ngIf="element.isEditable" ><input type="text" formControlName="Quantity"></span>
@@ -187,6 +191,7 @@
                   <span *ngIf="!element.isEditable" class="material-icons" (click)="editRow(element, index)">edit</span>
                   <span *ngIf="element.saveButton" class="material-icons" (click)="insertMeasuremnt(index)">done</span>
                   <span *ngIf="element.canEditMode" class="material-icons" (click)="editElement(element, index);">done_all</span>
+                  <span *ngIf="element.canEditMode" class="material-icons" (click)="editElement(element, index);">X</span>
                   <span *ngIf="!element.isEditable" (click)="copyMeasurementLine(element.id)" class="material-icons">content_copy</span>
                   <span class="material-icons" (click)="deleteRow(element, index)">delete</span>
 

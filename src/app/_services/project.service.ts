@@ -106,5 +106,13 @@ export class ProjectService{
         return this.http.get<any>(`${environment.apiUrl}/api/measurementsheet/fetch_description`, {params})
     }
 
+    onGetUnit(){
+        return this.http.get<any>(`${environment.apiUrl}/api/fetch_units`)
+    }
+
+    onaddSubLineItems(row_obj){
+        return this.http.post<any>(`${environment.apiUrl}/api/add_lineitems`, row_obj)
+    }
+
 
 }

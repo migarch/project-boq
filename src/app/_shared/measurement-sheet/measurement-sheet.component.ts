@@ -38,12 +38,36 @@ export interface Measurement{
   saveButton: boolean;
 }
 
+interface Unit{
+  Unit: String;
+  cat : Value[]
+}
+
+interface Value{
+  Length:boolean;
+  Breadth:boolean;
+  Depth:boolean;
+}
+
+
+
+
+
+
 @Component({
   selector: 'app-measurement-sheet',
   templateUrl: './measurement-sheet.component.html',
   styleUrls: ['./measurement-sheet.component.css']
 })
 export class MeasurementSheetComponent implements OnInit {
+  unt: Unit[] = [
+    {Unit: 'Packet',
+    cat: [{Length:true, Breadth: false, Depth: true}]
+    },
+    {Unit: 'new',
+    cat: [{Length:true, Breadth: false, Depth: true}]
+    }
+  ]
   loading= false;
   projectId = {}
   measurementList: FormGroup;
@@ -55,6 +79,9 @@ export class MeasurementSheetComponent implements OnInit {
   sortname = {};
   displayedColumns = ['ShortCode','Building','ShortDescription','CostCode','Component','Tag','XGrid','YGrid','Notes','Level','No','Length','Breadth','Depth','Quantity','Unit','Bill','Action'];
   dataSource;
+
+  filterUnit = {};
+  disabledlength = true;
 
   canEditCode = true;
   canEditMode = true;
@@ -192,7 +219,7 @@ export class MeasurementSheetComponent implements OnInit {
           ShortCode: null,
           Building: null,
           ShortDescription: null,
-          CostCode: null,
+          CostCode: 'null',
           LineItemDetailsId:null,
           Component:null,
           Tag:null,
@@ -212,8 +239,9 @@ export class MeasurementSheetComponent implements OnInit {
           saveButton: true
         }
       );
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+      this.dataSource = new MatTableDataSource(this.measurement);
+      // this.dataSource.sort = this.sort;
+      // this.dataSource.paginator = this.paginator;
   }
 
   selectBuilding(event: MatSelectChange){
@@ -250,26 +278,44 @@ export class MeasurementSheetComponent implements OnInit {
       let list = x.Description;
       for (let j = 0; j < list.length; j++){
           if(id === list[j]['id']){
+            let getun = list[j]['Unit'];
+            this.untData(getun);
             const controlArray = <FormArray> this.measurementList.get('tableRows');
             controlArray.controls[i].get('CostCode').setValue(list[j]['Costcode']);
             controlArray.controls[i].get('LineItemDetailsId').setValue(list[j]['id']);
-            // controlArray.controls[i].get('Component').setValue(null);
-            // controlArray.controls[i].get('Tag').setValue(null);
-            // controlArray.controls[i].get('XGrid').setValue(null);
-            // controlArray.controls[i].get('YGrid').setValue(null);
-            // controlArray.controls[i].get('Notes').setValue(null);
-            // controlArray.controls[i].get('Level').setValue(null);
-            // controlArray.controls[i].get('No').setValue(null);
-            // controlArray.controls[i].get('Length').setValue(null);
-            // controlArray.controls[i].get('Breadth').setValue(null);
-            // controlArray.controls[i].get('Depth').setValue(null);
-            // controlArray.controls[i].get('Quantity').setValue(null);
+            controlArray.controls[i].get('Component').setValue(null);
+            controlArray.controls[i].get('Tag').setValue(null);
+            controlArray.controls[i].get('XGrid').setValue(null);
+            controlArray.controls[i].get('YGrid').setValue(null);
+            controlArray.controls[i].get('Notes').setValue(null);
+            controlArray.controls[i].get('Level').setValue(null);
+            controlArray.controls[i].get('No').setValue(null);
+            controlArray.controls[i].get('Length').setValue(null);
+            controlArray.controls[i].get('Breadth').setValue(null);
+            controlArray.controls[i].get('Depth').setValue(null);
+            controlArray.controls[i].get('Quantity').setValue(null);
             controlArray.controls[i].get('Unit').setValue(list[j]['Unit']);
-            // controlArray.controls[i].get('Bill').setValue(null);
+            controlArray.controls[i].get('Bill').setValue(null);
           }
       }
     });
     
+  }
+
+  untData(getun: string){
+    console.log(getun)
+    let l  = this.unt;
+    for (let i = 0; i < l.length; i++){
+      if(l[i]['Unit'] === getun){
+        this.filterUnit = l[i]['cat'];
+        console.log(l[i]['cat'][0]['Length']);
+        // if(l[i]['cat']['Length'] == true){
+        //   console.log(l[i]['cat']['Length']);
+        // }
+        
+      }
+    }
+
   }
 
   editRow(row_obj, i){
@@ -350,6 +396,11 @@ export class MeasurementSheetComponent implements OnInit {
 
     
   }
+
+  editLength(row, i){
+    console.log(row);
+  }
   
 
 }
+

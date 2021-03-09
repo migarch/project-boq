@@ -72,10 +72,12 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   animationState = 'out';
   animationState2 = 'out';
   animationState3 = 'out';
+  animationState4 = 'out';
   buildingDetails: Building[] = [];
   buildingItem: Items[] = [];
   sequenceStatus: seqStatus[] = []
   Line: lineItem[] = [];
+  unit: any[] = [];
   dataSource:MatTableDataSource<lineItem>;
   usersData: lineItem[] = [];
   columnsToDisplay = ['ShortCode','LineItemDescription','IsSubLineItem','Qty','Unit','Rate','Amount','Remarks','Action'];
@@ -91,6 +93,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   addBulding: FormGroup;
   addItems: FormGroup;
   InsertLineItems: FormGroup;
+  InsertSubLineItems: FormGroup;
 
   disabledAddItem = false;
   disabledCopyItem = false;
@@ -376,6 +379,11 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.animationState3 = this.animationState3 === 'out' ? 'in' : 'out';
   }
 
+  reset4(){
+    this.InsertLineItems.reset();
+    this.animationState4 = this.animationState4 === 'out' ? 'in' : 'out';
+  }
+
   getStatus(params){
     this.projectService.onGetStatus(params)
     .pipe(first())
@@ -391,7 +399,42 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       this.animationState2 = this.animationState2 === 'out' ? 'in' : 'out';
     }else if(divName === 'addDiv3') {
       this.animationState3 = this.animationState3 === 'out' ? 'in' : 'out';
+      this.getUnit();
+    }else if(divName === 'addDiv4') {
+      this.animationState4 = this.animationState4 === 'out' ? 'in' : 'out';
+      this.getUnit();
     }
+  }
+
+  addSubLineItemsData(){
+    if(this.InsertSubLineItems.invalid){
+      return;
+    }
+    let params = this.getBItemId;
+    let lineItem = this.InsertSubLineItems.value;
+    lineItem.IsSubLineItem = true;
+    let defultCodeType = this.projectDetails[0]['SubLineItemShortCodeType'];
+  
+    const row_obj = [{ShortCode:null, ItemId:params['item_id'], LineItemShortCodeType:defultCodeType, lineItem}];
+      console.log(row_obj);
+        this.projectService.onaddSubLineItems(row_obj)
+        .pipe(first())
+        .subscribe(resps =>{
+          this.getLineItems(params);
+          Swal.fire({
+            title: 'add successfully',
+            icon: 'success',
+            // html: 'You selected: ' + result.value
+          });
+        });
+  }
+
+  getUnit(){
+    this.projectService.onGetUnit()
+    .pipe(first())
+    .subscribe(resp =>{
+      this.unit = resp;
+    });
   }
 
   slectAndItems(action, obj){
@@ -707,6 +750,16 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     });
 
     this.InsertLineItems = this.fb.group({
+      ShortDescription:['', Validators.required],
+      LineItemDescription:[''],
+      Qty:[''],
+      Unit:[''],
+      Rate:[''],
+      Amount:[''],
+      Remarks:['']
+    });
+
+    this.InsertSubLineItems = this.fb.group({
       ShortDescription:['', Validators.required],
       LineItemDescription:[''],
       Qty:[''],
