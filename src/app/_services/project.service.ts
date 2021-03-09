@@ -98,5 +98,13 @@ export class ProjectService{
         return this.http.post<any>(`${environment.apiUrl}/api/add_lineitems`, row_obj)
     }
 
+    onGetAllLineitems(params){
+        return this.http.get<any>(`${environment.apiUrl}/api/measurementsheet/fetch_description`, {params})
+    }
+
+    onGetAllLines(params){
+        return this.http.get<any>(`${environment.apiUrl}/api/measurementsheet/fetch_description`, {params})
+    }
+
 
 }
