@@ -7,7 +7,6 @@
           </mat-form-field>
       <div class="mat-elevation-z8">
         <form #form [formGroup]="measurementList">
-          
           <mat-table #table [dataSource]="dataSource" matSort formArrayName="tableRows" >
             
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -137,9 +136,9 @@
                 <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" (click)="editLength(element, index)">
                   <span *ngIf="!element.isEditable">{{element.Length }}</span>
                   <span  *ngIf="element.isEditable" >
-                  <mat-form-field>
-                    <input matInput type="text" formControlName="Length">
-                  </mat-form-field>
+                 
+                    <input [readonly]="true" type="text" formControlName="Length">
+                  
                   </span>
                 </mat-cell>
               </ng-container>
@@ -148,7 +147,9 @@
                 <mat-header-cell *matHeaderCellDef> Breadth </mat-header-cell>
                 <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                   <span *ngIf="!element.isEditable">{{element.Breadth }}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="Breadth"></span>
+                  <span  *ngIf="element.isEditable" >
+                  <input [readonly]="true" type="text" formControlName="Breadth">
+                  </span>
                 </mat-cell>
               </ng-container>
 
@@ -156,15 +157,9 @@
                 <mat-header-cell *matHeaderCellDef> Depth </mat-header-cell>
                 <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                   <span *ngIf="!element.isEditable">{{element.Depth}}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="Depth"></span>
-                </mat-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="Quantity">
-                <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.Quantity}}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="Quantity"></span>
+                  <span  *ngIf="element.isEditable" >
+                  <input [readonly]="true" type="text" formControlName="Depth">
+                  </span>
                 </mat-cell>
               </ng-container>
 
@@ -172,9 +167,23 @@
                 <mat-header-cell *matHeaderCellDef> Unit </mat-header-cell>
                 <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                   <span *ngIf="!element.isEditable">{{element.Unit}}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="Unit"></span>
+                  <span  *ngIf="element.isEditable" >
+                  <input [readonly]="true" type="text" formControlName="Unit">
+                  </span>
                 </mat-cell>
               </ng-container>
+
+              <ng-container matColumnDef="Quantity">
+                <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
+                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                  <span *ngIf="!element.isEditable">{{element.Quantity}}</span>
+                  <span  *ngIf="element.isEditable" >
+                  <input  type="text" formControlName="Quantity">
+                  </span>
+                </mat-cell>
+              </ng-container>
+
+              
 
               <ng-container matColumnDef="Bill">
                 <mat-header-cell *matHeaderCellDef> Bill </mat-header-cell>

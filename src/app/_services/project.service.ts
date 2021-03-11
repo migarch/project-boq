@@ -114,5 +114,9 @@ export class ProjectService{
         return this.http.post<any>(`${environment.apiUrl}/api/add_lineitems`, row_obj)
     }
 
+    onGetMissingShortCode(getMissingCode){
+        return this.http.post<any>(`${environment.apiUrl}/api/fetch/missing_shortcode`, getMissingCode)
+    }
+
 
 }

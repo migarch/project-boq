@@ -77,11 +77,14 @@ export class MeasurementSheetComponent implements OnInit {
   alllineitem: any[] = [];
   buildingName = {};
   sortname = {};
-  displayedColumns = ['ShortCode','Building','ShortDescription','CostCode','Component','Tag','XGrid','YGrid','Notes','Level','No','Length','Breadth','Depth','Quantity','Unit','Bill','Action'];
+  displayedColumns = ['ShortCode','Building','ShortDescription','CostCode','Component','Tag','XGrid','YGrid','Notes','Level','No','Length','Breadth','Depth','Unit','Quantity','Bill','Action'];
   dataSource;
 
   filterUnit = {};
   disabledlength = true;
+
+  rows: FormArray = this.fb.array([]);
+  form: FormGroup = this.fb.group({ 'tableRows': this.rows });
 
   canEditCode = true;
   canEditMode = true;
@@ -213,13 +216,16 @@ export class MeasurementSheetComponent implements OnInit {
 
 
   addMeasurmentsheet(){
+    this.measurementList = this.fb.group({
+      tableRows: this.fb.array([])
+    });
       this.measurement.unshift(
         {
           id:null,
           ShortCode: null,
           Building: null,
           ShortDescription: null,
-          CostCode: 'null',
+          CostCode: null,
           LineItemDetailsId:null,
           Component:null,
           Tag:null,
@@ -239,9 +245,12 @@ export class MeasurementSheetComponent implements OnInit {
           saveButton: true
         }
       );
+      this.measurement.forEach((data)=>{
+        this.tableRows.push(this.setUsersFormArray(data));
+      });
       this.dataSource = new MatTableDataSource(this.measurement);
-      // this.dataSource.sort = this.sort;
-      // this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
   }
 
   selectBuilding(event: MatSelectChange){
@@ -303,7 +312,6 @@ export class MeasurementSheetComponent implements OnInit {
   }
 
   untData(getun: string){
-    console.log(getun)
     let l  = this.unt;
     for (let i = 0; i < l.length; i++){
       if(l[i]['Unit'] === getun){
@@ -330,6 +338,8 @@ export class MeasurementSheetComponent implements OnInit {
     this.measurmentService.onUpdateMeasurment(data)
     .pipe(first())
     .subscribe(resp =>{
+      let params = {project_id:this.projectId};
+      this.getMeasurement(params);
       row_obj.isEditable = false;
       row_obj.canEditMode = false;
       row_obj.saveButton = false;
@@ -354,7 +364,6 @@ export class MeasurementSheetComponent implements OnInit {
     row_obj.bName = this.buildingName;
     row_obj.sname = this.sortname;
     row_obj.pId = {project_id:this.projectId};
-    console.log(row_obj);
     this.loading = true;
     this.measurmentService.onInsertMeasurment(row_obj)
     .pipe(first())
@@ -398,7 +407,7 @@ export class MeasurementSheetComponent implements OnInit {
   }
 
   editLength(row, i){
-    console.log(row);
+    // console.log(row);
   }
   
 
