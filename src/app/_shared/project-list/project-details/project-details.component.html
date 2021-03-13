@@ -12,8 +12,11 @@
         <div style="width: 100%; display: inline-flex; position: relative;">
         <div class="width-25">
             <mat-card class="bulding-card">
+                <div class="header">Building</div>
                 <mat-card-header>
+                
                 <mat-card-subtitle class="inner-subtitle">
+                    
                     <div class="containerX">
                         <div class="container">
                             <div class="copyButton">
@@ -25,6 +28,7 @@
                     </div>
                 </mat-card-subtitle>
                 </mat-card-header>
+                
                 <div [@slideInOut]="animationState" class="addDiv" >
                     <form [formGroup]="addBulding">
                         <mat-form-field class="width-50">
@@ -48,8 +52,8 @@
                             <span>{{building.BuildingName}}</span>
                             </span>
                             <span *ngIf="building.canEditCode">
-                            <input [(ngModel)]="building.BuildingShortCode" type="text" class="form-control" style="width: 25%;" /> |
-                            <input [(ngModel)]="building.BuildingName" type="text" class="form-control" />
+                            <input [(ngModel)]="building.BuildingShortCode" type="text" class="form-control" style="width: 25%;" (keydown)="handleInput($event)"/> |
+                            <input [(ngModel)]="building.BuildingName" type="text" class="form-control" (keydown)="handleInput($event)"/>
                             </span>
                         </span>
                         <span class="option-button">
@@ -68,6 +72,7 @@
         </div>
         <div class="width-25">
             <mat-card class="items-card">
+                <div class="header">Items</div>
                 <mat-card-header>
                     <mat-card-subtitle class="inner-subtitle">
                         <div class="containerX">
@@ -104,11 +109,11 @@
                     <mat-selection-list class="bulding-select" class="" #item [multiple]="false" (selectionChange)="getItemId($event)">
                         <mat-list-option class="bulding-list" *ngFor="let items of buildingItem; let i = index;" [value]="items.id">
                             <span>({{items.ItemShortCode}}) <span *ngIf="!items.canEditCode">{{items.ItemName}}</span>
-                                                            <span *ngIf="items.canEditCode"><input [(ngModel)]="items.ItemName" type="text" /></span>
+                                                            <span *ngIf="items.canEditCode"><input [(ngModel)]="items.ItemName" type="text" (keydown)="handleInput($event)"/></span>
                             </span>
                             <span class="option-button">
                                 <mat-hint>
-                                    <mat-icon *ngIf="!items.canEditCode" style="color: green;" (click)="items.canEditCode = true">edit</mat-icon>
+                                    <mat-icon *ngIf="!items.canEditCode" style="color: green;"  (click)="items.canEditCode = true">edit</mat-icon>
                                     <mat-icon *ngIf="items.canEditCode" (click)="updateItem(items)" style="color: green;">done</mat-icon>
                                     <mat-icon *ngIf="!items.canEditCode" (click)="deleteItem(i, items)" style="color: red;">delete</mat-icon>
                                     <mat-icon *ngIf="items.canEditCode" (click)="cancelItem(items)" style="color: red;">clear</mat-icon>
@@ -121,7 +126,9 @@
         </div>
         <div class="width-50" style="width: 50%;">
             <mat-card class="itemlist-card">
+                <div class="header">Line Items</div>
                 <mat-card-header>
+                    
                     <mat-card-subtitle class="inner-subtitle">
                         <div class="containerX">
                             <div class="container">
@@ -134,12 +141,12 @@
                                     </button>
                                 </div>
                                 <div class="conf-seq">
-                                    <select class="select-confi" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="lineitemSequence($event)" [disabled]="!sequenceStatus['LineItems']==false">
+                                    <select class="select-confi" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="lineitemSequence($event)" [disabled]="sequenceStatus['LineItems']==true">
                                         <option  *ngFor="let option of sequenceLineItem" [value]="option.value"
                                         [selected]="selectedLineItem === option.value">{{ option.viewValue }}</option>
                                         
                                     </select>
-                            </div>
+                                </div>
                             </div>
                         </div>
                     </mat-card-subtitle>
@@ -206,10 +213,10 @@
                             <td mat-cell *matCellDef="let element">
                                 <span *ngIf="!element.canEditCode">{{element.Unit}}</span>
                                 <span *ngIf="element.canEditCode">
-                                    <input [disabled]="element.HasSubLineItem" class="itemrow" [(ngModel)]="element.Unit" type="text" />
-                                    <!-- <mat-select required placeholder="Unit">
-                                        <mat-option *ngFor="let option of unit"  [value]="option">{{option}}</mat-option>
-                                    </mat-select> -->
+                                    <!-- <input [disabled]="element.HasSubLineItem" class="itemrow" [(ngModel)]="element.Unit" type="text" /> -->
+                                    <select required placeholder="Unit">
+                                        <option *ngFor="let option of unit" [selected]="option == element.Unit"  [value]="option">{{option}}</option>
+                                    </select>
                                 </span>
                             </td>
                         </ng-container>
@@ -236,11 +243,11 @@
                         </ng-container>
                         <ng-container matColumnDef="Action" >
                             <th mat-header-cell *matHeaderCellDef> </th>
-                            <td mat-cell *matCellDef="let element; let index = index;"> 
+                            <td mat-cell *matCellDef="let element;"> 
                                 <span style="display: flex;">
-                                    <mat-icon *ngIf="!element.canEditCode" style="color: green;" (click)="lineedt(element); element.canEditCode = true">edit</mat-icon>
+                                    <mat-icon *ngIf="!element.canEditCode" style="color: green;" (click)="lineItemEdit(element); element.canEditCode = true">edit</mat-icon>
                                     <mat-icon *ngIf="element.canEditCode" (click)="updateLineItem(element)" style="color: green;">done</mat-icon>
-                                    <mat-icon *ngIf="!element.canEditCode" (click)="deleteLineItem(index, element)" style="color: red;">delete</mat-icon>
+                                    <mat-icon *ngIf="!element.canEditCode" (click)="deleteLineItem(i = element.id)" style="color: red;">delete</mat-icon>
                                     <mat-icon *ngIf="element.canEditCode" (click)="cancelItem(element)" style="color: red;">clear</mat-icon>
                                 </span>
                             </td>
@@ -282,7 +289,11 @@
                                             </form>
                                         </div>
                                         <table #innerTables mat-table #innerSort="matSort" [dataSource]="element.sublineitems" matSort>
-            
+                                            <ng-container matColumnDef="id">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> id </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                                            </ng-container>
+
                                             <ng-container matColumnDef="ShortCode">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> S.Code </th>
                                                 <td mat-cell *matCellDef="let element"> {{element.ShortCode}} </td>
@@ -307,7 +318,11 @@
                                                 <th mat-header-cell *matHeaderCellDef> Unit </th>
                                                 <td mat-cell *matCellDef="let element">
                                                     <span *ngIf="!element.canEditCode">{{element.Unit}}</span>
-                                                    <span *ngIf="element.canEditCode"><input class="itemrow" [(ngModel)]="element.Unit" type="number" /></span>
+                                                    <span *ngIf="element.canEditCode">
+                                                        <select required placeholder="Unit">
+                                                            <option *ngFor="let option of unit" [selected]="option == element.Unit"  [value]="option">{{option}}</option>
+                                                        </select>
+                                                    </span>
                                                 </td>
                                             </ng-container>
                                             <ng-container matColumnDef="Rate">
@@ -338,9 +353,9 @@
                                                 </th>
                                                 <td mat-cell *matCellDef="let element;">   
                                                     <span style="display: flex;">
-                                                        <mat-icon *ngIf="!element.canEditCode" style="color: green;" (click)="element.canEditCode = true">edit</mat-icon>
+                                                        <mat-icon *ngIf="!element.canEditCode" style="color: green;" (click)="lineItemEdit(element); element.canEditCode = true">edit</mat-icon>
                                                         <mat-icon *ngIf="element.canEditCode" (click)="updateLineItem(element)" style="color: green;">done</mat-icon>
-                                                        <mat-icon *ngIf="!element.canEditCode" (click)="deletesulineItem(i = element.id)" style="color: red;">delete</mat-icon>
+                                                        <mat-icon *ngIf="!element.canEditCode" (click)="deletesulineItem(i= element.id)" style="color: red;">delete</mat-icon>
                                                         <mat-icon *ngIf="element.canEditCode" (click)="cancelItem(element)" style="color: red;">clear</mat-icon>
                                                     </span>
                                                 </td>

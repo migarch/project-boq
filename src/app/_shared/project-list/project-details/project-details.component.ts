@@ -89,6 +89,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   projectId = {};
   getBuildingId = {};
   getBItemId = {};
+  getLineItemShortcode = {}
   addBulding: FormGroup;
   addItems: FormGroup;
   InsertLineItems: FormGroup;
@@ -102,6 +103,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   lineItemPrice: number;
   subLineItemQty:number;
   subLineItemPrice: number;
+
+  selectedLineItemShortCodeType = [];
 
   disabledAddItem = false;
   disabledCopyItem = false;
@@ -206,6 +209,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     if (this.addItems.invalid) {
       return;
     }
+    let projectId = this.projectId;
+    this.autoGetStatus(projectId);
     let frmAddItem = this.addItems;
     let ht = this.projectService;
     let getValue = this.addItems.value;
@@ -213,7 +218,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     let ItemShortCodeType = { ItemShortCodeType: this.projectDetails[0]['ItemShortCodeType'] };
     const row_obj = [this.addItems.value, this.getBuildingId, sortcode, ItemShortCodeType];
     let params = this.getBuildingId;
-
+    let that = this;
     let getMissingCode = {id:params['building_id'], ShortCodeSlug:'Item', ShortCodeType: this.projectDetails[0]['ItemShortCodeType']}
     this.projectService.onGetMissingShortCode(getMissingCode)
       .pipe(first())
@@ -224,11 +229,12 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           .subscribe(resp => {
             this.buildingList(params);
             this.addItems.reset();
+            let projectId = this.projectId;
+            this.autoGetStatus(projectId);
             this.animationState2 = this.animationState2 === 'out' ? 'in' : 'out';
             });
           }
           else{
-          
             let options = {null: 'after'};
             let d = getCode;
             for(let i = 0; i<d.length; i++){
@@ -256,13 +262,12 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                 ht.addBuildingItems(row_obj)
                   .pipe(first())
                   .subscribe(resp => {
-                    // this.buildingList(params);
-                    // frmAddItem.reset();
-                    // this.animationState2 = this.animationState2 === 'out' ? 'in' : 'out';
+                    that.buildingList(params);
+                    that.animationState2 = that.animationState2 === 'out' ? 'in' : 'out';
+                    frmAddItem.reset();
                     Swal.fire({
                       title: 'add successfully',
                       icon: 'success',
-                      // html: 'You selected: ' + result.value
                     });
                 });
               }
@@ -271,22 +276,25 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  lineedt(row){
-    console.log(row)
+  lineItemEdit(row){
+    this.getUnit()
   }
 
   addLineItemsData() {
     if (this.InsertLineItems.invalid) {
       return;
     }
+    let projectId = this.projectId;
+    this.autoGetStatus(projectId);
     let ht = this.projectService;
     let params = this.getBItemId;
     let lineItem = this.InsertLineItems.value;
     let resetForm = this.InsertLineItems;
     lineItem.IsSubLineItem = false;
-    let defultCodeType = this.projectDetails[0]['LineItemShortCodeType'];
+    let that = this;
+    let defultCodeType = this.LineItemShortCodeType;
     const row_obj = [{ ShortCode: null, lineItemId:null, ItemId: params['item_id'], LineItemShortCodeType: defultCodeType, lineItem }];
-    let getMissingCode = {id:params['item_id'], ShortCodeSlug:'LineItem', ShortCodeType: this.projectDetails[0]['ItemShortCodeType']}
+    let getMissingCode = {id:params['item_id'], ShortCodeSlug:'LineItem', ShortCodeType: defultCodeType}
     this.projectService.onGetMissingShortCode(getMissingCode)
       .pipe(first())
       .subscribe(getCode => {
@@ -318,8 +326,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                   .pipe(first())
                   .subscribe(resp => {
                     resetForm.reset();
-                    this.animationState3 = this.animationState3 === 'out' ? 'in' : 'out';
-                    // this.getLineItems(params);
+                    that.animationState3 = that.animationState3 === 'out' ? 'in' : 'out';
+                    that.getLineItems(params);
                     Swal.fire({
                       title: 'add successfully',
                       icon: 'success',
@@ -336,6 +344,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             this.InsertLineItems.reset();
             this.animationState3 = this.animationState3 === 'out' ? 'in' : 'out';
             this.getLineItems(params);
+            let projectId = this.projectId;
+            this.autoGetStatus(projectId);
             Swal.fire({
               title: 'add successfully',
               icon: 'success',
@@ -344,6 +354,15 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  autoGetStatus(projectId){
+    let params = {project_id:projectId}
+    this.getStatus(params);
+  }
+
+  handleInput(event: KeyboardEvent): void{
+    event.stopPropagation();
+ } 
 
   addLineItemsDatasdsds() {
     if (this.InsertLineItems.invalid) {
@@ -623,11 +642,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   lineitemSequence($event: Event) {
     let type = 'LineItem';
     let value = ($event.target as HTMLSelectElement).value;
+    this.selectedLineItemShortCodeType = [{LineItemShortCodeType: value}];
     let data = { project_id: this.projectId, ShortCodeSlug: type, LineItemShortCodeType: value };
     this.projectService.onChangeSqStatus(data)
       .pipe(first())
       .subscribe({
         next: () => {
+          this.LineItemShortCodeType = value;
           Swal.fire({
             toast: true,
             title: 'Update successfully',
@@ -639,8 +660,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-
 
   toggleRows(element: lineItem) {
     element.sublineitems ?
@@ -697,6 +716,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         this.projectService.onDeletBuilding(params)
           .pipe(first())
           .subscribe(resp => {
+            let projectId = this.projectId;
+            this.autoGetStatus(projectId);
             this.buildingList(params);
             Swal.fire({
               title: 'Delete successfully',
@@ -749,6 +770,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           .subscribe(resp => {
             this.buildingItem.splice(index, 1);
             this.getLineItems(params);
+            let projectId = this.projectId;
+            this.autoGetStatus(projectId);
             Swal.fire({
               title: 'Delete successfully',
               icon: 'success',
@@ -781,9 +804,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  deleteLineItem(index, value) {
-    let params = { line_item_id: value['id'] };
-    const data = this.dataSource.data;
+  deleteLineItem(i) {
+    let params = { line_item_id: i};
     Swal.fire({
       title: 'Are you sure delete?',
       icon: 'warning',
@@ -798,8 +820,12 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         this.projectService.onDeleteLineItem(params)
           .pipe(first())
           .subscribe(resp => {
-            data.splice((this.paginator.pageIndex * this.paginator.pageSize) + index, 1);
+            const data = this.dataSource.data;
+            data.splice((this.paginator.pageIndex * this.paginator.pageSize) + i, 1);
             this.dataSource.data = data;
+            let projectId = this.projectId;
+            this.autoGetStatus(projectId);
+            this.getLineItems(this.tempId);
             Swal.fire({
               title: 'Delete successfully',
               icon: 'success',
@@ -827,6 +853,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           .pipe(first())
           .subscribe(resp => {
             this.getLineItems(this.tempId);
+            let projectId = this.projectId;
+            this.autoGetStatus(projectId);
             Swal.fire({
               title: 'Delete successfully',
               icon: 'success',

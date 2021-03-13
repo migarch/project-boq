@@ -142,6 +142,15 @@ button.ml-2{
     border-radius: 4px;
     margin: 4px;
   }
+  .header{
+    background: #b5dddd;
+    text-align: center;
+    font-size: 18px;
+    text-transform: uppercase;
+    padding: 12px;
+    overflow: hidden;
+    color: #ffffff;
+  }
  
 
   .mat-input-element:disabled, .mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after{
