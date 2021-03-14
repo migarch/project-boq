@@ -18,7 +18,7 @@ export class ProjectListComponent implements OnInit {
   loading= false;
   user:User;
   projects: Project[] = [];
-  displayedColumns2 = ['ProjectName','StartDate','EndDate','ClientName','ArchitectName','TypeOfProject','projectDetails','measurementSheet','Action'];
+  displayedColumns2 = ['ProjectName','StartDate','EndDate','ClientName','ArchitectName','TypeOfProject','projectDetails','viewProject','measurementSheet','Action'];
   dataSource;
 
   constructor(
@@ -59,21 +59,22 @@ export class ProjectListComponent implements OnInit {
 
   addProjectData(row_obj){
     this.loading = true
-    this.superService.addProject(row_obj)
-    .pipe(first())
-    .subscribe({
-      next:() =>{
-        this.loading = false
-        this.getProjects();
-        Swal.fire({
-          title: 'Project register successfull',
-          icon:'success',
-          timer:1500,
-        });
-      }, error: error =>{
-        Swal.fire(error,'','error')
-      }
-    });
+    console.log(row_obj);
+    // this.superService.addProject(row_obj)
+    // .pipe(first())
+    // .subscribe({
+    //   next:() =>{
+    //     this.loading = false
+    //     this.getProjects();
+    //     Swal.fire({
+    //       title: 'Project register successfull',
+    //       icon:'success',
+    //       timer:1500,
+    //     });
+    //   }, error: error =>{
+    //     Swal.fire(error,'','error')
+    //   }
+    // });
   }
 
   updateProjectData(row_obj){

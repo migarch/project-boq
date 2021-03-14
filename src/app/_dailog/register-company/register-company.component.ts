@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Company } from 'src/app/_models';
@@ -9,6 +9,7 @@ import { Company } from 'src/app/_models';
   styleUrls: ['./register-company.component.css']
 })
 export class RegisterCompanyComponent implements OnInit {
+
   submitted = false;
   error = '';
   action:string;

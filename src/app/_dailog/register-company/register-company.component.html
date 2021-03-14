@@ -3,8 +3,8 @@
 </button>
 <h2 mat-dialog-title>{{action}} Company</h2>
 <form [formGroup]="comanyDetails">
-  <mat-horizontal-stepper linear #stepper formArrayName="formArray">
 
+  <mat-horizontal-stepper [linear]="true" #stepper formArrayName="formArray">
     <mat-step formGroupName="0" [stepControl]="formArray?.get([0])">
         <ng-template matStepLabel>Company Info</ng-template>
         <mat-form-field class="width-50" style="display: none;">

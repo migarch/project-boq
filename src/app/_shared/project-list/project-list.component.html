@@ -92,6 +92,13 @@
               </mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="viewProject">
+              <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <a mat-raised-button color="primary" routerLink="project/details/view/{{element.id}}" routerLinkActive="active">View</a>
+              </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="Action">
               <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
               <mat-cell *matCellDef="let element">

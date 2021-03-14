@@ -15,6 +15,7 @@ import { SystemAdminModule } from './system-admin/system-admin.module';
 import { SuperAdminModule } from './super-admin/system-admin.module';
 import { LoginComponent } from './auth/login/login.component';
 import { MeasurementSheetComponent } from './_shared/measurement-sheet/measurement-sheet.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { MeasurementSheetComponent } from './_shared/measurement-sheet/measureme
     BrowserAnimationsModule,
     DailogModule,
     SystemAdminModule,
-    SuperAdminModule
+    SuperAdminModule,
+    MatDialogModule
   ],
   providers: [
     {provide: APP_INITIALIZER, useFactory:appInitializer, multi:true, deps:[AuthenticationService]},

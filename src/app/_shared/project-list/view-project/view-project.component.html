@@ -1,0 +1,10 @@
+<table style="background: #000;">
+	<ng-container *ngFor="let data of viewproject">
+		<tr>
+			<td [attr.rowspan]="data.Items.length">{{data['BuildingName']}}</td>
+		</tr>
+        <tr *ngFor="let item of data.Items;">
+        <td>{{item['ItemShortCode']}}</td>
+        </tr>
+	</ng-container>
+</table>

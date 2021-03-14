@@ -21,13 +21,14 @@ import { InsertMeasurmentComponent } from './insert-measurment/insert-measurment
     imports:[
         FormsModule,
         CommonModule,
+        FormsModule,
         ReactiveFormsModule,
         MaterialModule,
     ],
     exports:[
         RegisterCompanyComponent,
         RegisterProjectsComponent,
-        RegisterSuperAdminComponent
+        RegisterSuperAdminComponent,
     ]
 })
 export class DailogModule{

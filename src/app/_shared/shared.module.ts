@@ -10,6 +10,7 @@ import { ViewModeDirective } from './editable/view-mode.directive';
 import { EditModeDirective } from './editable/edit-mode.directive';
 import { FocusableDirective } from './project-list/project-details/focusable.directive';
 import { EditableOnEnterDirective } from './editable/edit-on-enter.directive';
+import { ViewProjectComponent } from './project-list/view-project/view-project.component';
 
 @NgModule({
 declarations:[
@@ -20,6 +21,7 @@ declarations:[
     EditModeDirective,
     FocusableDirective,
     EditableOnEnterDirective,
+    ViewProjectComponent,
 ],
 imports:[
     FormsModule,

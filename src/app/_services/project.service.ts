@@ -118,5 +118,9 @@ export class ProjectService{
         return this.http.post<any>(`${environment.apiUrl}/api/fetch/missing_shortcode`, getMissingCode)
     }
 
+    onviewBoq(params){
+        return this.http.get<any>(`${environment.apiUrl}/api/boq/view_boq`, {params})
+    }
+
 
 }

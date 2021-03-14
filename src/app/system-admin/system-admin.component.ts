@@ -59,20 +59,20 @@ export class SystemAdmin implements OnInit{
     
         addCompanyData(row_obj){
             console.log(row_obj);
-            this.systemService.registerCompany(row_obj)
-                .pipe(first())
-                .subscribe({
-                    next:() =>{
-                        this.getCompany();
-                        Swal.fire({
-                            title: 'Register Successfull',
-                            icon:'success',
-                            timer:2000,
-                          });
-                    }, error: error =>{
-                        Swal.fire(error,'','error')
-                    }
-                });
+            // this.systemService.registerCompany(row_obj)
+            //     .pipe(first())
+            //     .subscribe({
+            //         next:() =>{
+            //             this.getCompany();
+            //             Swal.fire({
+            //                 title: 'Register Successfull',
+            //                 icon:'success',
+            //                 timer:2000,
+            //               });
+            //         }, error: error =>{
+            //             Swal.fire(error,'','error')
+            //         }
+            //     });
         }
     
         updateCompanyData(row_obj){
