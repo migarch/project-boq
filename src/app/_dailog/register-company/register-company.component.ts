@@ -44,7 +44,7 @@ export class RegisterCompanyComponent implements OnInit {
     this.comanyDetails = this.formBuilder.group({
       formArray: this.formBuilder.array([
         this.formBuilder.group({
-          id:[this.local_data.id, Validators.required],
+          id:[this.local_data.id],
           ContactEmail:[this.local_data.ContactEmail, Validators.email],
           CompanyName:[this.local_data.CompanyName, Validators.required],
           ContactPhone:[this.local_data.ContactPhone, Validators.required],

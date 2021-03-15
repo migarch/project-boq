@@ -1,10 +1,19 @@
-<table style="background: #000;">
-	<ng-container *ngFor="let data of viewproject">
-		<tr>
-			<td [attr.rowspan]="data.Items.length">{{data['BuildingName']}}</td>
-		</tr>
-        <tr *ngFor="let item of data.Items;">
-        <td>{{item['ItemShortCode']}}</td>
-        </tr>
+<table style="background: #000; width:100%">
+	<tr>
+		<td>Building</td>
+		<td>Item</td>
+		<td>LineItem</td>
+		<td>Sublineitem</td>
+	</tr>
+	<ng-container *ngFor="let data of viewproject; let index=index">
+		<ng-container *ngFor="let item of data.Items; let i=index">
+			<tr>
+				<td [att.rowspan]="i">{{data.BuildingName}}</td>
+				<td [att.rowspan]="i" *ngFor="let d of item">{{d['ItemName']}}</td>
+			</tr>
+			<!-- <tr>
+				<td [att.colspan]="i" ></td>
+			</tr> -->
+		</ng-container>
 	</ng-container>
 </table>

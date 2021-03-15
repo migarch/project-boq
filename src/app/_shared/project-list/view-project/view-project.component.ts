@@ -27,16 +27,6 @@ export class ViewProjectComponent implements OnInit {
         this.viewproject = resp;
         console.log(this.viewproject);
         let data = this.viewproject;
-        for(let i=0; i<data.length; i++){
-          let itemname = data[i][0];
-          console.log(itemname);
-          // for(let i=0; i<itemname.length; i++){
-            // console.log(itemname[i]['ItemName']);
-          // }
-          
-        }
-        
-        // console.log(this.viewproject[0]['Items'][0][0]['id']);
       });
   }
 

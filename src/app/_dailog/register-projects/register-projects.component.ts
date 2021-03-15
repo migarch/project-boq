@@ -33,7 +33,9 @@ export class RegisterProjectsComponent implements OnInit {
     }
   
     doAction(){
-      this.dialogRef.close({event:this.action,data:this.local_data});
+      this.dialogRef.close({event:this.action,
+        data:[this.projectName.value, this.projectDetails.value, this.cleintInfo.value,
+        this.consultantInfo.value, this.architectInfo.value, this.projectType.value]});
      }
   
      closeDialog(){
