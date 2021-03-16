@@ -71,22 +71,21 @@ export class SuperAdminListComponent implements OnInit {
   }
 
   addUserData(row_obj){
-    console.log(row_obj);
-    this.commanSerive.userSignup(row_obj)
-    .pipe(first())
-    .subscribe({
-      next:() =>{
-        this.getSuperAdmin();
-        Swal.fire({
-          title: 'Register Successfull',
-          icon:'success',
-          timer:2000,
-        });
-      },
-      error: error =>{
-        Swal.fire(error,'','error')
-      }
-    });
+    // this.commanSerive.userSignup(row_obj)
+    // .pipe(first())
+    // .subscribe({
+    //   next:() =>{
+    //     this.getSuperAdmin();
+    //     Swal.fire({
+    //       title: 'Register Successfull',
+    //       icon:'success',
+    //       timer:2000,
+    //     });
+    //   },
+    //   error: error =>{
+    //     Swal.fire(error,'','error')
+    //   }
+    // });
   }
 
   updateUserData(row_obj){

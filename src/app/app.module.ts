@@ -21,7 +21,7 @@ import { MatDialogModule } from '@angular/material/dialog';
   declarations: [
     AppComponent,
     LoginComponent,
-    MeasurementSheetComponent
+    MeasurementSheetComponent,
   ],
   imports: [
     BrowserModule,

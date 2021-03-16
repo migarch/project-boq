@@ -61,7 +61,7 @@
 
             <ng-container matColumnDef="AddUser">
               <mat-header-cell *matHeaderCellDef> User </mat-header-cell>
-              <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="openDialog('Add',{})">Add User</button> </mat-cell>
+              <mat-cell *matCellDef="let element"> <button mat-raised-button color="primary" (click)="openDialog('Add',{}, element)">Add User</button> </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="Edit">

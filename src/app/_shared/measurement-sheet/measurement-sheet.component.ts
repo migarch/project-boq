@@ -12,6 +12,7 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { BehaviorSubject } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import Swal from 'sweetalert2';
+import { LengthCountComponent } from 'src/app/_dailog/length-count/length-count.component';
 
 export interface Measurement{
   id: number;
@@ -80,6 +81,8 @@ export class MeasurementSheetComponent implements OnInit {
   displayedColumns = ['ShortCode','Building','ShortDescription','CostCode','Component','Tag','XGrid','YGrid','Notes','Level','No','Length','Breadth','Depth','Unit','Quantity','Bill','Action'];
   dataSource;
 
+  sum = eval;
+
   filterUnit = {};
   disabledlength = true;
 
@@ -106,10 +109,10 @@ export class MeasurementSheetComponent implements OnInit {
     .subscribe(res =>{
       this.loading = false;
       this.measurement = res;
+      this.setControl();
       this.dataSource = new MatTableDataSource(this.measurement);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
-      this.setControl();
     });
   }
 
@@ -202,7 +205,7 @@ export class MeasurementSheetComponent implements OnInit {
       Notes:[data.Notes],
       Level:[data.Level],
       No:[data.No],
-      Length:[data.Length],
+      Length:[eval(data.Length)],
       Breadth:[data.Breadth],
       Depth:[data.Depth],
       Quantity:[data.Quantity],
@@ -245,9 +248,7 @@ export class MeasurementSheetComponent implements OnInit {
           saveButton: true
         }
       );
-      this.measurement.forEach((data)=>{
-        this.tableRows.push(this.setUsersFormArray(data));
-      });
+      this.setControl();
       this.dataSource = new MatTableDataSource(this.measurement);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -411,5 +412,26 @@ export class MeasurementSheetComponent implements OnInit {
   }
   
 
+  // lengthModel(event: any){
+  // var total = eval(event.target.value)
+  // console.log(total)
+  //   }
+
+
+    lengthModel(event: any, obj){
+      // obj.action = action;
+      const dialogRef  = this.dialog.open(LengthCountComponent,{
+        disableClose: true,
+        data:obj
+      });
+  
+      dialogRef.afterClosed().subscribe(result =>{
+        if(result.event == 'Add'){
+          // this.addUserData(result.data);
+        }else if(result.event == 'Update'){
+          // this.updateUserData(result.data);
+        }
+      }); 
+    }
 }
 

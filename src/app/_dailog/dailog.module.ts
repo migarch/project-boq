@@ -8,6 +8,7 @@ import { RegisterSuperAdminComponent } from "./register-super-admin/register-sup
 import { CopyItemsComponent } from './copy-items/copy-items.component';
 import { CopyLineitemsComponent } from './copy-lineitems/copy-lineitems.component';
 import { InsertMeasurmentComponent } from './insert-measurment/insert-measurment.component';
+import { LengthCountComponent } from './length-count/length-count.component';
 
 @NgModule({
     declarations:[
@@ -16,7 +17,8 @@ import { InsertMeasurmentComponent } from './insert-measurment/insert-measurment
         RegisterSuperAdminComponent,
         CopyItemsComponent,
         CopyLineitemsComponent,
-        InsertMeasurmentComponent
+        InsertMeasurmentComponent,
+        LengthCountComponent
     ],
     imports:[
         FormsModule,

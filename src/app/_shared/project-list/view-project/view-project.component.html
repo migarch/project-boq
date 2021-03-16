@@ -1,4 +1,4 @@
-<table style="background: #000; width:100%">
+<!-- <table style="background: #000; width:100%">
 	<tr>
 		<td>Building</td>
 		<td>Item</td>
@@ -8,12 +8,96 @@
 	<ng-container *ngFor="let data of viewproject; let index=index">
 		<ng-container *ngFor="let item of data.Items; let i=index">
 			<tr>
-				<td [att.rowspan]="i">{{data.BuildingName}}</td>
-				<td [att.rowspan]="i" *ngFor="let d of item">{{d['ItemName']}}</td>
+				<td>{{data.BuildingName}}</td>
+				<td>
+					<table>
+						<tr *ngFor="let d of item">
+							<td>{{d['ItemName']}}</td>
+						</tr>
+					</table>
+				</td>
 			</tr>
-			<!-- <tr>
-				<td [att.colspan]="i" ></td>
-			</tr> -->
 		</ng-container>
 	</ng-container>
-</table>
+</table> -->
+<!-- 
+<table mat-table
+       [dataSource]="dataSource" multiTemplateDataRows
+       class="mat-elevation-z8" style="width: 100%;">
+	   	
+
+		<ng-container matColumnDef="Buliding">
+			<mat-header-cell *matHeaderCellDef> Buliding </mat-header-cell>
+			<mat-cell *matCellDef="let element">
+				{{element.BuildingName}}
+			</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="expandedDetail">
+			<td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+			  <div class="example-element-detail"
+				   [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+				   <mat-list>
+					   <mat-list-item *ngFor="let item of element.Items">
+						   <div mat-line>{{item.ItemName}}</div>
+					   </mat-list-item>
+				   </mat-list>
+				</div>
+			</td>
+		</ng-container>
+
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  	<tr mat-row *matRowDef="let element; columns: displayedColumns;"
+      class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table> -->
+<div style="color: black;">
+	<mat-expansion-panel *ngFor="let building of viewproject">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+		Building Name:   {{building.BuildingName}}
+      </mat-panel-title>
+      
+    </mat-expansion-panel-header>
+	<table>
+		<tr *ngFor="let item of building.Items[0]">
+			<td>
+				<h4>	Item Name: 
+				<b>
+					{{item.ItemName}}
+
+				</b>
+				</h4>
+				<table>
+					<tr *ngFor="let lineItem of item.LineItems">
+						<td>
+							
+							<h4>
+								Line Item: 
+							<b>
+								{{lineItem.ShortDescription}}
+							</b>	
+							</h4>
+							<table>
+
+								<tr *ngFor="let subLineItem of lineItem.SublineItems">
+									<td>
+										<h4> Subline Item: 
+										<b>
+											{{subLineItem.ShortDescription}}
+										</b>
+										</h4></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+  </mat-expansion-panel>
+
+</div>

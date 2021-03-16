@@ -9,6 +9,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { RegisterCompanyComponent } from "../_dailog/register-company/register-company.component";
 import { RegisterSuperAdminComponent } from "../_dailog/register-super-admin/register-super-admin.component";
 import Swal from "sweetalert2";
+import { CommanService } from "../_services/comman.service";
 
 @Component({
     selector:'app-system-admin',
@@ -23,6 +24,7 @@ export class SystemAdmin implements OnInit{
 
     constructor(
         private systemService: SystemService,
+        private commanSerive: CommanService,
         public dialog: MatDialog,
     ){ }
 
@@ -135,11 +137,34 @@ export class SystemAdmin implements OnInit{
         }
         
         // add super admin dialog
-        openDialog(action, obj){
+        openDialog(action, obj, row){
         obj.action = action;
+        obj.CompanyId = row.id;
         const dialogRef = this.dialog.open(RegisterSuperAdminComponent,{
             disableClose: true,
             data:obj
         });
+        dialogRef.afterClosed().subscribe(result =>{
+            if(result.event == 'Add'){
+              this.addUserData(result.data);
+            }
+          }); 
         }
+
+        addUserData(row_obj){
+            this.commanSerive.userSignup(row_obj)
+            .pipe(first())
+            .subscribe({
+              next:() =>{
+                Swal.fire({
+                  title: 'Register Successfull',
+                  icon:'success',
+                  timer:2000,
+                });
+              },
+              error: error =>{
+                Swal.fire(error,'','error')
+              }
+            });
+          }
 }

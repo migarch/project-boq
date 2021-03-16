@@ -133,12 +133,10 @@
 
               <ng-container matColumnDef="Length">
                 <mat-header-cell *matHeaderCellDef> Length </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index" (click)="editLength(element, index)">
-                  <span *ngIf="!element.isEditable">{{element.Length }}</span>
+                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                  <span *ngIf="!element.isEditable">{{sum(element.Length)}}</span>
                   <span  *ngIf="element.isEditable" >
-                 
-                    <input [readonly]="true" type="text" formControlName="Length">
-                  
+                    <input readonly="true" (click)="lengthModel($event)" type="text" formControlName="Length">
                   </span>
                 </mat-cell>
               </ng-container>

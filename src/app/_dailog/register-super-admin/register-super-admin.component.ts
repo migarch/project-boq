@@ -37,7 +37,7 @@ export class RegisterSuperAdminComponent implements OnInit {
   ];
 
   doAction(){
-    this.dialogRef.close({event:this.action,data:[this.UserDetails.value, this.Credentials.value, this.RoleAndMenu.value]});
+    this.dialogRef.close({event:this.action,data:[this.UserDetails.value, this.Credentials.value, this.RoleAndMenu.value, this.data]});
    }
 
    closeDialog(){
