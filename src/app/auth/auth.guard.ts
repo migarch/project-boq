@@ -24,8 +24,8 @@ import { AuthenticationService } from "../_services/authentication.service";
                         this.router.navigate(['/super-dashboard']);
                     }
                     return false;
-                }
-                return true;
+            }
+            return true;
         }
         this.router.navigate(['/login'],{ queryParams: { returnUrl: state.url } });
         return false;

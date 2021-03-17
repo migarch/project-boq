@@ -62,30 +62,10 @@ export class SuperAdminListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result =>{
-      if(result.event == 'Add'){
-        this.addUserData(result.data);
-      }else if(result.event == 'Update'){
+      if(result.event == 'Update'){
         this.updateUserData(result.data);
       }
     }); 
-  }
-
-  addUserData(row_obj){
-    // this.commanSerive.userSignup(row_obj)
-    // .pipe(first())
-    // .subscribe({
-    //   next:() =>{
-    //     this.getSuperAdmin();
-    //     Swal.fire({
-    //       title: 'Register Successfull',
-    //       icon:'success',
-    //       timer:2000,
-    //     });
-    //   },
-    //   error: error =>{
-    //     Swal.fire(error,'','error')
-    //   }
-    // });
   }
 
   updateUserData(row_obj){

@@ -20,6 +20,7 @@ export class RegisterSuperAdminComponent implements OnInit {
   error='';
   hide = true;
   submitted = false;
+  emailDisabled = false;
   action:string;
   local_data:any;
   menusList: NavItem[] = []
@@ -51,10 +52,11 @@ export class RegisterSuperAdminComponent implements OnInit {
     this.local_data = {...this.data};
     this.action = this.local_data.action;
     
-    if(!this.local_data){
+    if(this.local_data.action == 'Add'){
+      this.emailDisabled = true;
       this.UserDetails = this.formBuilder.group({
         Name:['', Validators.required],
-        PhoneNumber:['',[Validators.required, Validators.minLength(10), Validators.maxLength(10)]]
+        PhoneNumber:['',[Validators.required, Validators.minLength(10), Validators.maxLength(10)], this.userValidators.phoneValidator()]
       });
 
       this.Credentials = this.formBuilder.group({
@@ -73,8 +75,8 @@ export class RegisterSuperAdminComponent implements OnInit {
       });
 
       this.Credentials = this.formBuilder.group({
-        Email:[this.local_data.Email, Validators.compose([Validators.email, Validators.required])],
-        Password:[this.local_data.Password, Validators.required],
+        Email:[this.local_data.Email, Validators.compose([Validators.email, Validators.required]),],
+        Password:['', Validators.required],
       });
 
       this.RoleAndMenu = this.formBuilder.group({

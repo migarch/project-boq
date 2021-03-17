@@ -13,13 +13,14 @@
                         <mat-error>Please provide a name </mat-error>
                       </mat-form-field>
                       <mat-form-field class="width-50 ml-2">
-                        <input type="tel" matInput placeholder="Phone" formControlName="PhoneNumber" required>
-                        <mat-error>Please provide a valid number </mat-error>
+                        <input type="tel" matInput placeholder="Phone" formControlName="PhoneNumber" [readonly]="!emailDisabled">
+                        <mat-hint align="end" *ngIf="UserDetails.get('PhoneNumber').pending">searching</mat-hint>
+                        <mat-error *ngIf="UserDetails.get('PhoneNumber').errors?.phoneExist">Already registered</mat-error>
                       </mat-form-field>
                       <div>
                         <button mat-button [mat-dialog-close]="true">Cancel</button>
                         <button mat-button matStepperPrevious>Back</button>
-                        <button mat-button matStepperNext>Next</button>
+                        <button mat-button matStepperNext [disabled]="UserDetails.invalid || UserDetails.pending">Next</button>
                       </div>
                     </form>
                 </mat-step>
@@ -27,9 +28,9 @@
                     <form [formGroup]="Credentials">
                       <ng-template matStepLabel>Credentials</ng-template>
                       <mat-form-field class="width-50">
-                        <input type="email" matInput placeholder="Email" class="width-50" formControlName="Email">
+                        <input type="email" matInput placeholder="Email" class="width-50" formControlName="Email" [readonly]="!emailDisabled">
                         <mat-hint align="end" *ngIf="Credentials.get('Email').pending">searching</mat-hint>
-                        <mat-error *ngIf="Credentials.get('Email').errors?.emailExist">Email Exist</mat-error>
+                        <mat-error *ngIf="Credentials.get('Email').errors?.emailExist">Already registered</mat-error>
                       </mat-form-field>
                       <mat-form-field class="width-50 ml-2">
                         <input type="password" [type]="hide ? 'password' : 'text'" matInput placeholder="Password" formControlName="Password" required>
@@ -50,7 +51,7 @@
                       <ng-template matStepLabel>Assign Role & Menu</ng-template>
                       <mat-form-field appearance="fill" class="width-50">
                         <mat-select formControlName="UserRoleId"  required>
-                            <mat-option *ngFor="let roles of roleOption" [value]="roles.id">
+                            <mat-option *ngFor="let roles of roleOption" [selected]="roles.id == roles.name" [value]="roles.id">
                                 {{ roles.name }}
                               </mat-option>
                         </mat-select>
