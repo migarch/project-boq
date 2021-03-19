@@ -3,15 +3,13 @@
 </button>
 <h2 mat-dialog-title>Insert {{action}}</h2>
 <mat-dialog-content>
-    <form [formGroup]="insertLength">
+    <form [formGroup]="insertDepth">
         <mat-form-field class="input">
-        <input matInput type="text" formControlName="Length" placeholder="Length">
-        <mat-error>
-            required
-          </mat-error>
+        <input matInput type="text" formControlName="Depth" placeholder="Depth">
+        <mat-error>required</mat-error>
         </mat-form-field>
     </form>
 
-    <button [disabled]="insertLength.invalid" mat-button mat-raised-button class="submitButton" color="primary"
+    <button [disabled]="insertDepth.invalid" mat-button mat-raised-button class="submitButton" color="primary"
         (click)="doAction()">Submit</button>
 </mat-dialog-content>

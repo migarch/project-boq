@@ -86,7 +86,7 @@
                                     </button>
                                 </div>
                                 <div class="conf-seq">
-                                        <select class="select-confi" [disabled]="!sequenceStatus['Items']==false" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="itemSequence($event)">
+                                        <select class="select-confi" [disabled]="sequenceStatus['Items']==true" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="itemSequence($event)">
                                             <option  *ngFor="let option of sequenceItem" [value]="option.value"
                                             [selected]="selectedItem === option.value">{{ option.viewValue }}</option>
                                         </select>
@@ -128,7 +128,6 @@
             <mat-card class="itemlist-card">
                 <div class="header">Line Items</div>
                 <mat-card-header>
-                    
                     <mat-card-subtitle class="inner-subtitle">
                         <div class="containerX">
                             <div class="container">
@@ -144,7 +143,6 @@
                                     <select class="select-confi" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="lineitemSequence($event)" [disabled]="sequenceStatus['LineItems']==true">
                                         <option  *ngFor="let option of sequenceLineItem" [value]="option.value"
                                         [selected]="selectedLineItem === option.value">{{ option.viewValue }}</option>
-                                        
                                     </select>
                                 </div>
                             </div>

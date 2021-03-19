@@ -69,6 +69,7 @@ export class SuperAdminListComponent implements OnInit {
   }
 
   updateUserData(row_obj){
+    console.log(row_obj);
     this.commanSerive.updateUser(row_obj)
     .pipe(first())
     .subscribe({

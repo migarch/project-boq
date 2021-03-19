@@ -1,215 +1,292 @@
+<div class="full-width" style="background:#414141; padding: 20px 20px;">
+  <button mat-button mat-raised-button color="primary" (click)="toggleAdd('addDiv')"> Insert</button>
+</div>
+<div [@slideInOut]="animationState" class="addDiv" style="background: #424242;">
+  <form [formGroup]="buildingAndLineItems" style="padding: 10px 15px; width: 100%;">
+    <mat-form-field class="width-10">
+      <mat-select matNativeControl (selectionChange)="selectBuilding($event)" formControlName="BuildingName"
+        placeholder="Select Building">
+        <mat-option *ngFor="let b of building" [value]="b.id">{{b.BuildingName}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <mat-select formControlName="ShortDescription" matNativeControl (selectionChange)="selectSortDes($event)"
+        placeholder="Select Description">
+        <!-- <mat-option>---</mat-option> -->
+        <mat-optgroup *ngFor="let item of buildingItems" [label]="item.ItemName">
+          <mat-option *ngFor="let lineitem of item.Description" [value]="lineitem.id">{{lineitem.ShortDescription}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+  </form>
+  <form [formGroup]="insertMeasurement">
+    <mat-form-field class="width-10 ml-2" style="display: none;">
+      <input matInput type="text" formControlName="CostCode" placeholder="Costcode">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="Component" placeholder="Component">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="Tag" placeholder="Tag">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="XGrid" placeholder="XGrid">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="YGrid" placeholder="YGrid">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="Notes" placeholder="Notes">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="Level" placeholder="Level">
+    </mat-form-field>
+
+    <mat-form-field class="width-10">
+      <input matInput type="number" formControlName="No" placeholder="No">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="Length" (click)="insertlengthModel($event,'Lengths',{})" readonly="true" placeholder="Length">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="Breadth" (click)="insertBreadthModel($event,'Breadths',{})" readonly="true" placeholder="Breadth">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="Depth" (click)="insertDepthModel($event,'Depths',{})" readonly="true" placeholder="Depth">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="number" formControlName="Quantity" readonly="true" placeholder="Quantity">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="Unit" readonly="true" placeholder="Unit">
+    </mat-form-field>
+
+    <mat-form-field class="width-10 ml-2">
+      <input matInput type="text" formControlName="Bill" placeholder="Bill">
+    </mat-form-field>
+
+
+
+    <button [disabled]="this.insertMeasurement.invalid" mat-button mat-raised-button color="primary"
+      (click)="addMeasurement()" style="margin-left: 14px;">Insert</button>
+    <button class="cancelButton" mat-button mat-raised-button (click)="reset()">Cancel</button>
+  </form>
+</div>
 <mat-card class="full-width">
-    <mat-card-content>
-      <!-- (click)="configMeasurment('Insert',{})" -->
-        <button mat-button mat-raised-button color="primary" (click)="addMeasurmentsheet()"> Insert</button>
-          <mat-form-field>
-            <input matInput placeholder="Search">
-          </mat-form-field>
-      <div class="mat-elevation-z8">
-        <form #form [formGroup]="measurementList">
-          <mat-table #table [dataSource]="dataSource" matSort formArrayName="tableRows" >
-            
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; let index=index; columns: displayedColumns;" [formGroupName]="index"></mat-row>
+  <mat-card-content>
+    <!-- <span>Recene</span> -->
 
-            <ng-container matColumnDef="id">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> id </mat-header-cell>
-              <mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
-                <span *ngIf="!element.isEditable">{{element.id}}</span>
-              </mat-cell>
-            </ng-container>
+    <div class="mat-elevation-z8">
+      <mat-table #table [dataSource]="dataSource" multiTemplateDataRows matSort>
 
-            <ng-container matColumnDef="ShortCode">
-              <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
-              <mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </mat-cell>          
-            </ng-container>
-          
-            <ng-container matColumnDef="Building">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Building </mat-header-cell>
-              <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                <span *ngIf="!element.isEditable">{{element.Building }}</span>
-                <span *ngIf="element.isEditable" >
-                  <mat-form-field class="width-100">
-                    <mat-select matNativeControl (selectionChange)="selectBuilding($event, element)" formControlName="Building" placeholder="building">
-                      <mat-option *ngFor="let b of building" [value]="b.id">{{b.BuildingName}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                  
-                </span>
-              </mat-cell>
-            </ng-container>
 
-            <ng-container matColumnDef="ShortDescription">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> S.Description </mat-header-cell>
-              <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                <span *ngIf="!element.isEditable">{{element.ShortDescription }}</span>
-                <span  *ngIf="element.isEditable" >
-                  
-                  <mat-form-field class="width-100">
-                    <mat-select formControlName="ShortDescription" matNativeControl (selectionChange)="selectSortDes($event, index)">
-                      <mat-option>---</mat-option>
-                      <mat-optgroup *ngFor="let item of buildingItems" [label]="item.ItemName">
-                        <mat-option *ngFor="let lineitem of item.Description" [value]="lineitem.id">{{lineitem.ShortDescription}}</mat-option>
-                      </mat-optgroup>
-                    </mat-select>
-                  </mat-form-field>
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Sr.No </mat-header-cell>
+          <mat-cell *matCellDef="let element;">
+            {{1}}
+          </mat-cell>
+        </ng-container>
 
-                </span>
-              </mat-cell>
-            </ng-container>
+        <ng-container matColumnDef="BuildingName">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Building </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{element.BuildingName}}
+          </mat-cell>
+        </ng-container>
 
-            
-            <ng-container matColumnDef="CostCode">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> CostCode </mat-header-cell>
-              <mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
-                <span *ngIf="!element.isEditable">{{element.CostCode}}</span>
-                <span  *ngIf="element.isEditable" ><input type="text" formControlName="CostCode"></span>
-              </mat-cell>
-            </ng-container>
+        <ng-container matColumnDef="Action">
+          <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <mat-icon>{{expandedElement ===
+              element ? 'expand_less' : 'expand_more'}}</mat-icon>
+          </mat-cell>
+        </ng-container>
 
-            <ng-container matColumnDef="LineItemDetailsId">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> LineItemDetailsId </mat-header-cell>
-              <mat-cell *matCellDef="let element; let index = index;" [formGroupName]="index">
-                <span *ngIf="!element.isEditable">{{element.LineItemDetailsId}}</span>
-              </mat-cell>
-            </ng-container>
 
-             <ng-container matColumnDef="Component">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Component </mat-header-cell>
-              <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                <span *ngIf="!element.isEditable">{{element.Component }}</span>
-                <span  *ngIf="element.isEditable" ><input type="text" formControlName="Component"></span>
-              </mat-cell>
-            </ng-container>
-          
-            
-            <ng-container matColumnDef="Tag">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Tag </mat-header-cell>
-              <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                <span *ngIf="!element.isEditable">{{element.Tag }}</span>
-                <span  *ngIf="element.isEditable" ><input type="text" formControlName="Tag"></span>
-              </mat-cell>
-            </ng-container>
-            
-            <ng-container matColumnDef="XGrid">
-                <mat-header-cell *matHeaderCellDef> XGrid </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.XGrid }}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="XGrid"></span>
-                </mat-cell>
-              </ng-container>
+        <ng-container matColumnDef="expandedDetail">
+          <mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+            <div class="example-element-detail full-width"
+              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              <div class="inner-table mat-elevation-z8" *ngIf="expandedElement">
 
-              <ng-container matColumnDef="YGrid">
-                <mat-header-cell *matHeaderCellDef> YGrid </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.YGrid }}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="YGrid"></span>
-                </mat-cell>
-              </ng-container>
+                <mat-table #table #innerTables #innerSort="matSort" [dataSource]="element.MsData" matSort>
 
-              <ng-container matColumnDef="Notes">
-                <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.Notes }}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="Notes"></span>
-                </mat-cell>
-              </ng-container>
+                  <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef> Sr.No </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i=index"> {{i+1}} </mat-cell>
+                  </ng-container>
 
-              <ng-container matColumnDef="Level">
-                <mat-header-cell *matHeaderCellDef> Level </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.Level }}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="Level"></span>
-                </mat-cell>
-              </ng-container>
+                  <ng-container matColumnDef="Building">
+                    <mat-header-cell *matHeaderCellDef> Building </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Building}} </mat-cell>
+                  </ng-container>
 
-              <ng-container matColumnDef="No">
-                <mat-header-cell *matHeaderCellDef> No </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.No }}</span>
-                  <span  *ngIf="element.isEditable" ><input type="text" formControlName="No"></span>
-                </mat-cell>
-              </ng-container>
+                  <ng-container matColumnDef="BuildingId">
+                    <mat-header-cell *matHeaderCellDef> BuildingId </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.BuildingId}} </mat-cell>
+                  </ng-container>
 
-              <ng-container matColumnDef="Length">
-                <mat-header-cell *matHeaderCellDef> Length </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{sum(element.Length)}}</span>
-                  <span  *ngIf="element.isEditable" >
-                    <input readonly="true" (click)="lengthModel($event)" type="text" formControlName="Length">
-                  </span>
-                </mat-cell>
-              </ng-container>
+                  <ng-container matColumnDef="ShortDescription">
+                    <mat-header-cell *matHeaderCellDef> ShortDescription </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.ShortDescription}} </mat-cell>
+                  </ng-container>
 
-               <ng-container matColumnDef="Breadth">
-                <mat-header-cell *matHeaderCellDef> Breadth </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.Breadth }}</span>
-                  <span  *ngIf="element.isEditable" >
-                  <input [readonly]="true" type="text" formControlName="Breadth">
-                  </span>
-                </mat-cell>
-              </ng-container>
+                  <ng-container matColumnDef="CostCode">
+                    <mat-header-cell *matHeaderCellDef> CostCode </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.CostCode}} </mat-cell>
+                  </ng-container>
 
-              <ng-container matColumnDef="Depth">
-                <mat-header-cell *matHeaderCellDef> Depth </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.Depth}}</span>
-                  <span  *ngIf="element.isEditable" >
-                  <input [readonly]="true" type="text" formControlName="Depth">
-                  </span>
-                </mat-cell>
-              </ng-container>
+                  <ng-container matColumnDef="Component">
+                    <mat-header-cell *matHeaderCellDef> Component </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{element.Component}}</span>
+                      <span *ngIf="element.canEditCode"><input class="itemrow" [(ngModel)]="element.Component"
+                          type="text" /></span>
+                    </mat-cell>
+                  </ng-container>
 
-              <ng-container matColumnDef="Unit">
-                <mat-header-cell *matHeaderCellDef> Unit </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.Unit}}</span>
-                  <span  *ngIf="element.isEditable" >
-                  <input [readonly]="true" type="text" formControlName="Unit">
-                  </span>
-                </mat-cell>
-              </ng-container>
+                  <ng-container matColumnDef="Tag">
+                    <mat-header-cell *matHeaderCellDef> Tag </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{element.Tag}}</span>
+                      <span *ngIf="element.canEditCode"><input class="itemrow" [(ngModel)]="element.Tag"
+                          type="text" /></span>
+                    </mat-cell>
+                  </ng-container>
 
-              <ng-container matColumnDef="Quantity">
-                <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.Quantity}}</span>
-                  <span  *ngIf="element.isEditable" >
-                  <input  type="text" formControlName="Quantity">
-                  </span>
-                </mat-cell>
-              </ng-container>
+                  <ng-container matColumnDef="XGrid">
+                    <mat-header-cell *matHeaderCellDef> XGrid </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{element.XGrid}}</span>
+                      <span *ngIf="element.canEditCode"><input class="itemrow" [(ngModel)]="element.XGrid"
+                          type="text" /></span>
+                    </mat-cell>
+                  </ng-container>
 
-              
+                  <ng-container matColumnDef="YGrid">
+                    <mat-header-cell *matHeaderCellDef> YGrid </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{element.YGrid}}</span>
+                      <span *ngIf="element.canEditCode"><input class="itemrow" [(ngModel)]="element.YGrid"
+                          type="text" /></span>
+                    </mat-cell>
+                  </ng-container>
 
-              <ng-container matColumnDef="Bill">
-                <mat-header-cell *matHeaderCellDef> Bill </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <span *ngIf="!element.isEditable">{{element.Bill}}</span>
-                  <span *ngIf="element.isEditable"><input type="text" formControlName="Bill"></span>
-                </mat-cell>
-              </ng-container>
+                  <ng-container matColumnDef="Notes">
+                    <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{element.Notes}}</span>
+                      <span *ngIf="element.canEditCode"><input class="itemrow" [(ngModel)]="element.Notes"
+                          type="text" /></span>
+                    </mat-cell>
+                  </ng-container>
 
-              <ng-container matColumnDef="Action">
-                <mat-header-cell *matHeaderCellDef> </mat-header-cell>
-                <mat-cell *matCellDef="let element; let index=index">
-                  <!-- (click)="element.canEditCode = true" -->
-                  <span *ngIf="!element.isEditable" class="material-icons" (click)="editRow(element, index)">edit</span>
-                  <span *ngIf="element.saveButton" class="material-icons" (click)="insertMeasuremnt(index)">done</span>
-                  <span *ngIf="element.canEditMode" class="material-icons" (click)="editElement(element, index);">done_all</span>
-                  <span *ngIf="element.canEditMode" class="material-icons" (click)="editElement(element, index);">X</span>
-                  <span *ngIf="!element.isEditable" (click)="copyMeasurementLine(element.id)" class="material-icons">content_copy</span>
-                  <span class="material-icons" (click)="deleteRow(element, index)">delete</span>
+                  <ng-container matColumnDef="Level">
+                    <mat-header-cell *matHeaderCellDef> Level </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{element.Level}}</span>
+                      <span *ngIf="element.canEditCode"><input class="itemrow" [(ngModel)]="element.Level"
+                          type="text" /></span>
+                    </mat-cell>
+                  </ng-container>
 
-                </mat-cell>
-              </ng-container>
-          
-            
-          </mat-table>
-          <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
-        
-        </form>
-      </div>
-    </mat-card-content>
+                  <ng-container matColumnDef="No">
+                    <mat-header-cell *matHeaderCellDef> No </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{element.No}}</span>
+                      <span *ngIf="element.canEditCode"><input class="itemrow" [(ngModel)]="element.No"
+                          type="number" /></span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Length">
+                    <mat-header-cell *matHeaderCellDef> Length </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{sumOfLength(element.Length)}}</span>
+                      <span *ngIf="element.canEditCode" class="modalButton" (click)="rowlengthModel($event,'Length',{}, element)">{{sumOfLength(element.Length)}}</span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Breadth">
+                    <mat-header-cell *matHeaderCellDef> Breadth </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{sumOfLength(element.Breadth)}}</span>
+                      <span *ngIf="element.canEditCode" class="modalButton" (click)="rowBreadthModel($event,'Breadth',{}, element)">{{sumOfLength(element.Breadth)}}</span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Depth">
+                    <mat-header-cell *matHeaderCellDef> Depth </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{sumOfLength(element.Depth)}}</span>
+                      <span *ngIf="element.canEditCode" class="modalButton" (click)="rowDepthModel($event,'Depth',{}, element)">{{sumOfLength(element.Depth)}}</span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Unit">
+                    <mat-header-cell *matHeaderCellDef> Unit </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.Unit}} </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Quantity">
+                    <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
+                    <mat-cell *matCellDef="let element">{{element.Quantity}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Bill">
+                    <mat-header-cell *matHeaderCellDef> Bill </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span *ngIf="!element.canEditCode">{{element.Bill}}</span>
+                      <span *ngIf="element.canEditCode"><input class="itemrow" [(ngModel)]="element.Bill"
+                          type="text" /></span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                    <mat-cell *matCellDef="let element;">
+                      <span style="display: flex;">
+                        <mat-icon *ngIf="!element.canEditCode" style="color: green;"
+                          (click)="element.canEditCode = true">edit</mat-icon>
+                        <mat-icon *ngIf="!element.canEditCode" (click)="copyMeasurementLine(element.id)">content_copy</mat-icon>
+                        <mat-icon *ngIf="element.canEditCode" (click)="updateRow(element)" style="color: green;">done</mat-icon>
+                        <mat-icon *ngIf="!element.canEditCode" (click)="deleteRow(element, index=element.id)" style="color: red;">delete</mat-icon>
+                        <mat-icon *ngIf="element.canEditCode" (click)="cancelItem(element)" style="color: red;">clear</mat-icon>
+                      </span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="innerDisplayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: innerDisplayedColumns;"></mat-row>
+                </mat-table>
+
+              </div>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+        <mat-row *matRowDef="let element; columns: columnsToDisplay;" [class.example-element-row]="element.MsData?.data"
+          [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element">
+        </mat-row>
+        <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></mat-row>
+
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+    </div>
+  </mat-card-content>
 </mat-card>

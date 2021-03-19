@@ -23,7 +23,8 @@ export class RegisterSuperAdminComponent implements OnInit {
   emailDisabled = false;
   action:string;
   local_data:any;
-  menusList: NavItem[] = []
+  menusList: NavItem[] = [];
+  assignMenuList: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<RegisterSuperAdminComponent>,
@@ -69,6 +70,7 @@ export class RegisterSuperAdminComponent implements OnInit {
         UserMenuId:[this.menusList,Validators.required]
       });
     }else{
+      this.getAssignMenu(this.local_data.id);
       this.UserDetails = this.formBuilder.group({
         Name:[this.local_data.Name, Validators.required],
         PhoneNumber:[this.local_data.PhoneNumber,[Validators.required, Validators.minLength(10), Validators.maxLength(10)]]
@@ -76,15 +78,27 @@ export class RegisterSuperAdminComponent implements OnInit {
 
       this.Credentials = this.formBuilder.group({
         Email:[this.local_data.Email, Validators.compose([Validators.email, Validators.required]),],
-        Password:['', Validators.required],
+        Password:[''],
       });
 
       this.RoleAndMenu = this.formBuilder.group({
         UserRoleId:[this.local_data.UserRoleId,Validators.required],
-        UserMenuId:[this.menusList,Validators.required]
+        UserMenuId:[this.menusList]
       });
     }
   }
+
+  getAssignMenu(id){
+    let params = {userId:id}
+    this.commanServe.onGetAssignMenu(params)
+      .pipe(first())
+      .subscribe(resp =>{
+        this.assignMenuList = resp;
+        console.log(this.assignMenuList);
+      })
+  }
+
+  
 
   getMenuList(){
     this.commanServe.getAllMenu()

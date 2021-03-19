@@ -9,6 +9,8 @@ import { CopyItemsComponent } from './copy-items/copy-items.component';
 import { CopyLineitemsComponent } from './copy-lineitems/copy-lineitems.component';
 import { InsertMeasurmentComponent } from './insert-measurment/insert-measurment.component';
 import { LengthCountComponent } from './length-count/length-count.component';
+import { BreadthCountComponent } from './breadth-count/breadth-count.component';
+import { DepthCountComponent } from './depth-count/depth-count.component';
 
 @NgModule({
     declarations:[
@@ -18,7 +20,9 @@ import { LengthCountComponent } from './length-count/length-count.component';
         CopyItemsComponent,
         CopyLineitemsComponent,
         InsertMeasurmentComponent,
-        LengthCountComponent
+        LengthCountComponent,
+        BreadthCountComponent,
+        DepthCountComponent
     ],
     imports:[
         FormsModule,

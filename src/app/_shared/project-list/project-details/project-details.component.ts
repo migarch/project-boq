@@ -105,6 +105,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   subLineItemQty:number;
   subLineItemPrice: number;
 
+  selectedItemShortCodeType:any = [];
   selectedLineItemShortCodeType = [];
 
   disabledAddItem = false;
@@ -151,8 +152,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           .subscribe(resp => {
             this.projectDetails = resp;
             this.ProjectName = this.projectDetails[0]['ProjectName'];
-            this.ItemShortCodeType = this.projectDetails[0]['ItemShortCodeType'];
             this.LineItemShortCodeType = this.projectDetails[0]['LineItemShortCodeType'];
+            this.selectedItemShortCodeType = this.projectDetails[0]['ItemShortCodeType'];
+            this.ItemShortCodeType = this.projectDetails[0]['ItemShortCodeType'];
             if (this.ItemShortCodeType == 'A-Z') {
               this.selectedItem = this.sequenceItem[0].value;
             } else if (this.ItemShortCodeType == 'a-z') {
@@ -216,8 +218,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     let ht = this.projectService;
     let getValue = this.addItems.value;
     let sortcode = { ItemShortCode: null };
-    let ItemShortCodeType = { ItemShortCodeType: this.projectDetails[0]['ItemShortCodeType'] };
-    const row_obj = [this.addItems.value, this.getBuildingId, sortcode, ItemShortCodeType];
+    let selecteddefultCodeType = {ItemShortCodeType:this.selectedItemShortCodeType};
+    let ItemShortCodeType = { ItemShortCodeType: this.projectDetails[0]['ItemShortCodeType']};
+    const row_obj = [this.addItems.value, this.getBuildingId, sortcode, selecteddefultCodeType];
     let params = this.getBuildingId;
     let that = this;
     let getMissingCode = {id:params['building_id'], ShortCodeSlug:'Item', ShortCodeType: this.projectDetails[0]['ItemShortCodeType']}
@@ -623,6 +626,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   itemSequence($event: Event) {
     let type = 'Item';
     let value = ($event.target as HTMLSelectElement).value;
+    this.selectedItemShortCodeType = value;
+    // this.selectedItemShortCodeType = [value[0]['ItemShortCodeType']];
     let data = { project_id: this.projectId, ShortCodeSlug: type, ItemShortCodeType: value };
     this.projectService.onChangeSqStatus(data)
       .pipe(first())

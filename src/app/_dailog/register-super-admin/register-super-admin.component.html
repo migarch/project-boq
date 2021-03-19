@@ -33,7 +33,7 @@
                         <mat-error *ngIf="Credentials.get('Email').errors?.emailExist">Already registered</mat-error>
                       </mat-form-field>
                       <mat-form-field class="width-50 ml-2">
-                        <input type="password" [type]="hide ? 'password' : 'text'" matInput placeholder="Password" formControlName="Password" required>
+                        <input type="password" [type]="hide ? 'password' : 'text'" matInput placeholder="Password" formControlName="Password">
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
@@ -61,8 +61,8 @@
                         </mat-form-field>
                       <mat-form-field appearance="fill">
                         <mat-label>Menu</mat-label>
-                        <mat-select formControlName="UserMenuId" multiple required>
-                          <mat-option  *ngFor="let menus of menusList" [value]="menus.id">{{menus.displayName}}</mat-option>
+                        <mat-select formControlName="UserMenuId" multiple>
+                          <mat-option  *ngFor="let menus of menusList; let i=index" [checked]="menus.id" [value]="menus.id">{{menus.displayName}}</mat-option>
                         </mat-select>
                         <mat-error>Please select menu</mat-error>
                       </mat-form-field>

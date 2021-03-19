@@ -19,8 +19,8 @@ export class MeasurmentService{
         return this.http.post<any>(`${environment.apiUrl}/api/duplicate/measurementsheet`, rowId)
     }
 
-    onUpdateMeasurment(data){
-        return this.http.put<any>(`${environment.apiUrl}/api/update/measurementsheet`, data)
+    onUpdateMeasurment(row_obj){
+        return this.http.put<any>(`${environment.apiUrl}/api/update/measurementsheet`, row_obj)
     }
 
     onDeleteRow(params){
