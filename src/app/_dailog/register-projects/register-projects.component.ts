@@ -33,8 +33,9 @@ export class RegisterProjectsComponent implements OnInit {
     }
   
     doAction(){
+      let getId = {id:this.data['id']};
       this.dialogRef.close({event:this.action,
-        data:[this.projectName.value, this.projectDetails.value, this.cleintInfo.value,
+        data:[getId, this.projectName.value, this.projectDetails.value, this.cleintInfo.value,
         this.consultantInfo.value, this.architectInfo.value, this.projectType.value]});
      }
   

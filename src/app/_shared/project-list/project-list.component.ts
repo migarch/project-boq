@@ -43,6 +43,7 @@ export class ProjectListComponent implements OnInit {
   }
 
   openProjectDialog(action, obj){
+    // console.log(obj);
     obj.action = action;
     const dialogRef = this.dialog.open(RegisterProjectsComponent,{
       disableClose: true,
