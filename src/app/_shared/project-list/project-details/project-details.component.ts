@@ -106,6 +106,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   selectedItemShortCodeType:any = [];
   selectedLineItemShortCodeType = [];
+  selectedSubLineItemShortCodeType = [];
 
   disabledAddItem = false;
   disabledCopyItem = false;
@@ -125,10 +126,18 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     { value: '1-N', viewValue: '1,2,3' }
   ];
 
+  sequenceSubLineItem: any[] = [
+    { value: 'A-Z', viewValue: 'A,B,C' },
+    { value: 'a-z', viewValue: 'a,b,c' },
+    { value: '1-N', viewValue: '1,2,3' }
+  ];
+
   ItemShortCodeType: string;
   LineItemShortCodeType: string;
+  SubLineItemShortCodeType: string;
   selectedItem;
   selectedLineItem;
+  selectedSubLineItem;
 
   canEditCode = false;
   tempId: any;
@@ -153,6 +162,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             this.LineItemShortCodeType = this.projectDetails[0]['LineItemShortCodeType'];
             this.selectedItemShortCodeType = this.projectDetails[0]['ItemShortCodeType'];
             this.ItemShortCodeType = this.projectDetails[0]['ItemShortCodeType'];
+            this.SubLineItemShortCodeType = this.projectDetails[0]['SubLineItemShortCodeType'];
             if (this.ItemShortCodeType == 'A-Z') {
               this.selectedItem = this.sequenceItem[0].value;
             } else if (this.ItemShortCodeType == 'a-z') {
@@ -166,6 +176,14 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               this.selectedLineItem = this.sequenceLineItem[1].value;
             } else if (this.LineItemShortCodeType == '1-N') {
               this.selectedLineItem = this.sequenceLineItem[2].value;
+            }
+
+            if (this.SubLineItemShortCodeType == 'A-Z') {
+              this.selectedSubLineItem = this.sequenceLineItem[0].value;
+            } else if (this.SubLineItemShortCodeType == 'a-z') {
+              this.selectedSubLineItem = this.sequenceLineItem[1].value;
+            } else if (this.SubLineItemShortCodeType == '1-N') {
+              this.selectedSubLineItem = this.sequenceLineItem[2].value;
             }
 
           })
@@ -524,11 +542,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     if (this.InsertSubLineItems.invalid) {
       return;
     }
+    let projectId = this.projectId;
+    this.autoGetStatus(projectId);
     let params = this.getBItemId;
     let that = this;
     let lineItem = this.InsertSubLineItems.value;
     lineItem.IsSubLineItem = true;
-    let defultCodeType = this.projectDetails[0]['SubLineItemShortCodeType'];
+    let defultCodeType = this.SubLineItemShortCodeType;
     const row_obj = [{ ShortCode: null, lineItemId: row['id'], ItemId: params['item_id'], LineItemShortCodeType: defultCodeType, lineItem }];
     let getMissingCode = {id:row['id'], ShortCodeSlug:'SubLineItem', ShortCodeType: defultCodeType}
     this.projectService.onGetMissingShortCode(getMissingCode)
@@ -541,6 +561,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             this.InsertSubLineItems.reset();
             this.animationState4 = this.animationState4 === 'out' ? 'in' : 'out';
             this.getLineItems(params);
+            let projectId = this.projectId;
+            this.autoGetStatus(projectId);
             Swal.fire({
               title: 'add successfully',
               icon: 'success',
@@ -691,6 +713,28 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.LineItemShortCodeType = value;
+          Swal.fire({
+            toast: true,
+            title: 'Update successfully',
+            position: 'top',
+            timer: 1500,
+            icon: 'success',
+            showConfirmButton: false,
+          });
+        }
+      });
+  }
+
+  subLineitemSequence($event: Event) {
+    let type = 'SubLineItem';
+    let value = ($event.target as HTMLSelectElement).value;
+    this.selectedSubLineItemShortCodeType = [{SubLineItemShortCodeType: value}];
+    let data = { project_id: this.projectId, ShortCodeSlug: type, SubLineItemShortCodeType: value };
+    this.projectService.onChangeSqStatus(data)
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.SubLineItemShortCodeType = value;
           Swal.fire({
             toast: true,
             title: 'Update successfully',

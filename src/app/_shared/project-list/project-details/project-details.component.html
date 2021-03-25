@@ -132,12 +132,21 @@
                                         <mat-icon>content_copy</mat-icon>
                                     </button>
                                 </div>
-                                <div class="conf-seq">
+
+                                <div class="conf-seq" style="right: 10%;">
                                     <select class="select-confi" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="lineitemSequence($event)" [disabled]="sequenceStatus['LineItems']==true">
                                         <option  *ngFor="let option of sequenceLineItem" [value]="option.value"
                                         [selected]="selectedLineItem === option.value">{{ option.viewValue }}</option>
                                     </select>
                                 </div>
+
+                                <div class="conf-seq">
+                                    <select class="select-confi" matTooltip="Select items sequence" matTooltipPosition="above" matNativeControl #sel (change)="subLineitemSequence($event)" [disabled]="sequenceStatus['SubLineItem']==true">
+                                        <option  *ngFor="let option of sequenceSubLineItem" [value]="option.value"
+                                        [selected]="selectedSubLineItem === option.value">{{ option.viewValue }}</option>
+                                    </select>
+                                </div>
+                                
                             </div>
                         </div>
                     </mat-card-subtitle>
