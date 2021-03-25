@@ -86,7 +86,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   expandedElement: lineItem | null;
   isTableExpanded = false;
   projectDetails: any[] = [];
-  ProjectName: string;
   projectId = {};
   getBuildingId = {};
   getBItemId = {};
@@ -145,13 +144,12 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   getBuilding(params) {
     this.projectService.getBuildingList(params)
       .pipe(first())
-      .subscribe(resp => {
-        this.buildingDetails = resp;
+      .subscribe(buliding => {
+        this.buildingDetails = buliding;
         this.projectService.getProjectDetails(params)
           .pipe(first())
           .subscribe(resp => {
             this.projectDetails = resp;
-            this.ProjectName = this.projectDetails[0]['ProjectName'];
             this.LineItemShortCodeType = this.projectDetails[0]['LineItemShortCodeType'];
             this.selectedItemShortCodeType = this.projectDetails[0]['ItemShortCodeType'];
             this.ItemShortCodeType = this.projectDetails[0]['ItemShortCodeType'];
@@ -178,34 +176,28 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     if (this.addBulding.invalid) {
       return;
     }
-    const row_obj = this.addBulding.value;
-    let params = { project_id: row_obj.ProjectId }
+    let params = {project_id:this.projectId};
+    const row_obj = [this.addBulding.value, params];
     this.projectService.addBuilding(row_obj)
       .pipe(first())
-      .subscribe({
-        next: () => {
-          this.animationState = this.animationState === 'out' ? 'in' : 'out';
-          Swal.fire({
-            toast: true,
-            title: 'add successfully',
-            position: 'top',
-            timer: 1500,
-            icon: 'success',
-            showConfirmButton: false,
-          });
-          this.getBuilding(params);
-        }, error: error => {
-          Swal.fire({
-            toast: true,
-            title: error,
-            position: 'top',
-            timer: 1500,
-            icon: 'error',
-            showConfirmButton: false,
-          })
-        }
-      })
-
+      .subscribe(resp => {
+          this.projectService.getBuildingList(params)
+          .pipe(first())
+          .subscribe(buliding => {
+            this.buildingDetails = buliding;
+            this.addBulding.reset();
+            this.animationState = this.animationState === 'out' ? 'in' : 'out';
+              Swal.fire({
+                toast: true,
+                title: 'add successfully',
+                position: 'top',
+                timer: 1500,
+                icon: 'success',
+                showConfirmButton: false,
+            });
+        });
+      });
+  
   }
 
   sendItemsData() {
@@ -219,7 +211,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     let getValue = this.addItems.value;
     let sortcode = { ItemShortCode: null };
     let selecteddefultCodeType = {ItemShortCodeType:this.selectedItemShortCodeType};
-    let ItemShortCodeType = { ItemShortCodeType: this.projectDetails[0]['ItemShortCodeType']};
+    let ItemShortCodeType = { ItemShortCodeType:this.selectedItemShortCodeType};
     const row_obj = [this.addItems.value, this.getBuildingId, sortcode, selecteddefultCodeType];
     let params = this.getBuildingId;
     let that = this;
@@ -302,7 +294,22 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.projectService.onGetMissingShortCode(getMissingCode)
       .pipe(first())
       .subscribe(getCode => {
-        if(getCode != ''){
+        if(getCode == ''){
+          this.projectService.onaddLineItems(row_obj)
+          .pipe(first())
+          .subscribe(resps => {
+            this.InsertLineItems.reset();
+            this.animationState3 = this.animationState3 === 'out' ? 'in' : 'out';
+            this.getLineItems(params);
+            let projectId = this.projectId;
+            this.autoGetStatus(projectId);
+            Swal.fire({
+              title: 'add successfully',
+              icon: 'success',
+            });
+          });
+        }
+        else{
           let options = {null: 'after'};
             let d = getCode;
             for(let i = 0; i<d.length; i++){
@@ -341,24 +348,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               }
             });
         }
-        else{
-          this.projectService.onaddLineItems(row_obj)
-          .pipe(first())
-          .subscribe(resps => {
-            this.InsertLineItems.reset();
-            this.animationState3 = this.animationState3 === 'out' ? 'in' : 'out';
-            this.getLineItems(params);
-            let projectId = this.projectId;
-            this.autoGetStatus(projectId);
-            Swal.fire({
-              title: 'add successfully',
-              icon: 'success',
-            });
-          });
-        }
       });
   }
-
+  
   autoGetStatus(projectId){
     let params = {project_id:projectId}
     this.getStatus(params);
@@ -384,7 +376,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.projectService.onaddLineItems(row_obj)
             .pipe(first())
             .subscribe(resps => {
-              console.log(resps);
               Swal.fire({
                 title: 'add successfully',
                 icon: 'success',
@@ -392,7 +383,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               });
             });
         } else {
-          console.log(resp);
           let options = { '2': 2, 'null': 'after' }
           Swal.fire({
             title: 'Where to add?',
@@ -415,7 +405,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               this.projectService.onaddLineItems(row_obj)
                 .pipe(first())
                 .subscribe(resps => {
-                  console.log(resps);
                   Swal.fire({
                     title: 'add successfully',
                     icon: 'success',
@@ -536,23 +525,70 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       return;
     }
     let params = this.getBItemId;
+    let that = this;
     let lineItem = this.InsertSubLineItems.value;
     lineItem.IsSubLineItem = true;
     let defultCodeType = this.projectDetails[0]['SubLineItemShortCodeType'];
     const row_obj = [{ ShortCode: null, lineItemId: row['id'], ItemId: params['item_id'], LineItemShortCodeType: defultCodeType, lineItem }];
-
-    this.projectService.onaddSubLineItems(row_obj)
+    let getMissingCode = {id:row['id'], ShortCodeSlug:'SubLineItem', ShortCodeType: defultCodeType}
+    this.projectService.onGetMissingShortCode(getMissingCode)
       .pipe(first())
-      .subscribe(resps => {
-        this.InsertSubLineItems.reset();
-        this.animationState4 = this.animationState4 === 'out' ? 'in' : 'out';
-        this.getLineItems(params);
-        Swal.fire({
-          title: 'add successfully',
-          icon: 'success',
-          // html: 'You selected: ' + result.value
-        });
+      .subscribe(getCode => {
+        if(getCode == ''){
+          this.projectService.onaddSubLineItems(row_obj)
+          .pipe(first())
+          .subscribe(resps => {
+            this.InsertSubLineItems.reset();
+            this.animationState4 = this.animationState4 === 'out' ? 'in' : 'out';
+            this.getLineItems(params);
+            Swal.fire({
+              title: 'add successfully',
+              icon: 'success',
+            });
+          });
+        }else{
+          let options = {null: 'after'};
+            let d = getCode;
+            for(let i = 0; i<d.length; i++){
+              options[d[i]] = d[i] 
+            }
+            Swal.fire({
+              title: 'Where to add?',
+              input: 'radio',
+              inputOptions: options,
+              inputPlaceholder: 'Please select',
+              showCancelButton: true,
+              inputValidator: function (value) {
+                return new Promise(function (resolve, reject) {
+                  if (value !== '') {
+                    resolve(null);
+                  } else {
+                    resolve('You need to select');
+                  }
+                });
+              }
+            }).then(function (result) {
+              if (result.isConfirmed) {
+                const row_obj = [{ ShortCode: result.value, lineItemId:row['id'], ItemId: params['item_id'], LineItemShortCodeType: defultCodeType, lineItem }];
+                console.log(row_obj);
+                that.projectService.onaddSubLineItems(row_obj)
+                  .pipe(first())
+                  .subscribe(resp => {
+                    that.animationState4 = that.animationState4 === 'out' ? 'in' : 'out';
+                    that.InsertSubLineItems.reset();
+                    that.getLineItems(params);
+                    Swal.fire({
+                      title: 'add successfully',
+                      icon: 'success',
+                    });
+                });
+              }
+            });
+
+        }
+          
       });
+    
   }
 
   getUnit() {
@@ -708,6 +744,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   deleteBuilding(i, value) {
     let params = { building_id: value['id'] };
+    let that = this;
     Swal.fire({
       title: 'Are you sure delete?',
       icon: 'warning',
@@ -722,15 +759,16 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         this.projectService.onDeletBuilding(params)
           .pipe(first())
           .subscribe(resp => {
+            that.disabledAddItem = false;
             let projectId = this.projectId;
-            this.autoGetStatus(projectId);
-            this.buildingList(params);
+            that.autoGetStatus(projectId);
+            that.buildingList(params);
             Swal.fire({
               title: 'Delete successfully',
               icon: 'success',
               timer: 2000,
             });
-            this.buildingDetails.splice(i, 1);
+            that.buildingDetails.splice(i, 1);
           });
       }
     });
@@ -778,6 +816,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             this.getLineItems(params);
             let projectId = this.projectId;
             this.autoGetStatus(projectId);
+            this.disabledAddLineItems = false;
+            this.disabledCopyLineItem = false;
             Swal.fire({
               title: 'Delete successfully',
               icon: 'success',
@@ -882,7 +922,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     });
 
     this.addBulding = this.fb.group({
-      ProjectId: [this.projectId, Validators.required],
       BuildingShortCode: [''],
       BuildingName: ['', Validators.required]
     });
